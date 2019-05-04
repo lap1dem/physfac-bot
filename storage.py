@@ -1,4 +1,3 @@
-
 import shelve as sh
 import database as db
 from config import *
@@ -63,6 +62,29 @@ def get_edata(chat_id):
         except KeyError:
             return None
 
+# ------------LIBRARY-----------------------------
+def update_lib_path(chat_id,repository):
+    with sh.open(shelve_name) as storage:
+        try:
+            cur_path = storage['lib'+str(chat_id)]
+            storage['lib'+str(chat_id)] = cur_path + '/' + repository
+        except KeyError:
+            storage['lib'+str(chat_id)] = repository
+
+def del_lib_path(chat_id):
+    with sh.open(shelve_name) as storage:
+        try:
+            del storage['lib'+str(chat_id)]
+        except KeyError:
+            pass
+
+def get_lib_path(chat_id):
+    with sh.open(shelve_name) as storage:
+        try:
+            return storage['lib'+str(chat_id)]
+        except KeyError:
+            return None
+
 # -------------OTHER--------------------------------
 def check_running(chat_id):
     with sh.open(shelve_name) as storage:
@@ -71,3 +93,21 @@ def check_running(chat_id):
             return True
         except KeyError:
             return False
+
+def update_prev(chat_id, text):
+    with sh.open(shelve_name) as storage:
+        storage['prev'+str(chat_id)] = text
+
+def del_prev(chat_id):
+    with sh.open(shelve_name) as storage:
+        try:
+            del storage['prev'+str(chat_id)]
+        except KeyError:
+            pass
+
+def get_prev(chat_id):
+    with sh.open(shelve_name) as storage:
+        try:
+            return storage['prev'+str(chat_id)]
+        except KeyError:
+            return None

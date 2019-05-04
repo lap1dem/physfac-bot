@@ -3,17 +3,17 @@ import database
 
 def translate_day(ukr_day):
     if ukr_day == c.week_days[0]:
-        return 'monday.jpeg'
+        return 'monday.jpg'
     elif ukr_day == c.week_days[1]:
-        return 'tuesday.jpeg'
+        return 'tuesday.jpg'
     elif ukr_day == c.week_days[2]:
-        return 'wednesday.jpeg'
+        return 'wednesday.jpg'
     elif ukr_day == c.week_days[3]:
-        return 'thursday.jpeg'
+        return 'thursday.jpg'
     elif ukr_day == c.week_days[4]:
-        return 'friday.jpeg'
+        return 'friday.jpg'
     elif ukr_day == c.week_days[5]:
-        return ['monday.jpeg','tuesday.jpeg','wednesday.jpeg','thursday.jpeg','friday.jpeg']
+        return ['monday.jpg','tuesday.jpg','wednesday.jpg','thursday.jpg','friday.jpg']
 
 def get_sch_folder(msg):
     if msg == '1 курс':
