@@ -1,7 +1,7 @@
 import shelve as sh
 import database as db
 from config import *
-
+import os
 
 # ------------------SCHEDULE----------------------------------
 
@@ -12,6 +12,10 @@ def update_schedule_path(chat_id,repository):
             storage['sch'+str(chat_id)] = cur_path + '/' + repository
         except KeyError:
             storage['sch'+str(chat_id)] = repository
+
+def replace_schedule_path(chat_id, path):
+    with sh.open(shelve_name) as storage:
+        storage['sch'+str(chat_id)] = path
 
 def del_schedule_path(chat_id):
     with sh.open(shelve_name) as storage:
@@ -26,6 +30,13 @@ def get_schedule_path(chat_id):
             return storage['sch'+str(chat_id)]
         except KeyError:
             return None
+
+def schedule_step_back(chat_id):
+    cur_path = get_schedule_path(chat_id)
+    new_path = os.path.split(cur_path)[0]
+    replace_schedule_path(chat_id, new_path)
+
+
 
 # ---------------EMAILS-----------------------------
 
@@ -85,6 +96,20 @@ def get_lib_path(chat_id):
         except KeyError:
             return None
 
+def replace_lib_path(chat_id, path):
+    with sh.open(shelve_name) as storage:
+        storage['lib'+str(chat_id)] = path
+
+def lib_step_back(chat_id):
+    cur_path = get_lib_path(chat_id)
+    new_path = os.path.split(cur_path)[0]
+    replace_lib_path(chat_id, new_path)
+
+def lib_at_start(chat_id):
+    if os.path.split(get_lib_path(chat_id))[0] == '':
+        return True
+    return False
+
 # -------------OTHER--------------------------------
 def check_running(chat_id):
     with sh.open(shelve_name) as storage:
@@ -94,20 +119,20 @@ def check_running(chat_id):
         except KeyError:
             return False
 
-def update_prev(chat_id, text):
-    with sh.open(shelve_name) as storage:
-        storage['prev'+str(chat_id)] = text
-
-def del_prev(chat_id):
-    with sh.open(shelve_name) as storage:
-        try:
-            del storage['prev'+str(chat_id)]
-        except KeyError:
-            pass
-
-def get_prev(chat_id):
-    with sh.open(shelve_name) as storage:
-        try:
-            return storage['prev'+str(chat_id)]
-        except KeyError:
-            return None
+# def update_prev(chat_id, text):
+#     with sh.open(shelve_name) as storage:
+#         storage['prev'+str(chat_id)] = text
+#
+# def del_prev(chat_id):
+#     with sh.open(shelve_name) as storage:
+#         try:
+#             del storage['prev'+str(chat_id)]
+#         except KeyError:
+#             pass
+#
+# def get_prev(chat_id):
+#     with sh.open(shelve_name) as storage:
+#         try:
+#             return storage['prev'+str(chat_id)]
+#         except KeyError:
+#             return None
