@@ -1,1 +1,1 @@
-web: python fizbot.py
+web: python3 fizbot.py
