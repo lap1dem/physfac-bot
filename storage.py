@@ -2,6 +2,15 @@ import shelve as sh
 import database as db
 from config import *
 import os
+import json
+
+
+def delete_all(chat_id):
+    with sh.open(shelve_name) as storage:
+        keys = list(storage.keys())
+        todel = [key for key in keys if str(chat_id) in key]
+        for key in todel:
+            del storage[key]
 
 # ------------------SCHEDULE----------------------------------
 
@@ -73,7 +82,7 @@ def get_edata(chat_id):
         except KeyError:
             return None
 
-# ------------LIBRARY-----------------------------
+# -----------OLD-LIBRARY-----------------------------
 def update_lib_path(chat_id,repository):
     with sh.open(shelve_name) as storage:
         try:
@@ -109,6 +118,61 @@ def lib_at_start(chat_id):
     if os.path.split(get_lib_path(chat_id))[0] == '':
         return True
     return False
+
+# -----------NEW-LIBRARY-----------------------------
+def libUpdName(chat_id, name):
+    with sh.open(shelve_name) as storage:
+        try:
+            names = json.loads(storage['lib_n'+str(chat_id)])
+            names.append(name)
+            storage['lib_n'+str(chat_id)] = json.dumps(names)
+        except KeyError:
+            storage['lib_n'+str(chat_id)] = json.dumps([name])
+
+def libUpdLink(chat_id, link):
+    with sh.open(shelve_name) as storage:
+        try:
+            links = json.loads(storage['lib_link'+str(chat_id)])
+            links.append(link)
+            storage['lib_link'+str(chat_id)] = json.dumps(links)
+        except KeyError:
+            storage['lib_link'+str(chat_id)] = json.dumps([link])
+
+def libSetYear(chat_id, year):
+    with sh.open(shelve_name) as storage:
+        storage['lib_y'+str(chat_id)] = year
+
+def libSetLesson(chat_id, lesson):
+    with sh.open(shelve_name) as storage:
+        storage['lib_l'+str(chat_id)] = lesson
+
+def libSetAus(chat_id, aus):
+    with sh.open(shelve_name) as storage:
+        storage['lib_a'+str(chat_id)] = aus
+
+def libGetYear(chat_id):
+    with sh.open(shelve_name) as storage:
+        try:
+            return storage['lib_y'+str(chat_id)]
+        except KeyError:
+            return None
+
+def libGetLesson(chat_id):
+    with sh.open(shelve_name) as storage:
+        try:
+            return storage['lib_l'+str(chat_id)]
+        except KeyError:
+            return None
+
+def libGetAll(chat_id):
+    with sh.open(shelve_name) as storage:
+        names = json.loads(storage['lib_n'+str(chat_id)])
+        links = json.loads(storage['lib_link'+str(chat_id)])
+        year = storage['lib_y'+str(chat_id)]
+        lesson = storage['lib_l'+str(chat_id)]
+        aus = storage['lib_a'+str(chat_id)]
+        return [names, links, year, lesson, aus]
+
 
 # -------------OTHER--------------------------------
 def check_running(chat_id):

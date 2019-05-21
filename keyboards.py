@@ -28,6 +28,7 @@ def week_days():
 def groups_for_year(year):
     data = database.SQL(database_name)
     group_list = data.get_groups_for_year(year)
+    data.close()
     groups = ReplyKeyboardMarkup(resize_keyboard = True, one_time_keyboard=True)
     for i in group_list:
         groups.row(i)
@@ -43,6 +44,7 @@ def departments():
 def email_dep():
     data = database.SQL(database_name)
     dep_list = data.emails_deplist()
+    data.close()
     deps = ReplyKeyboardMarkup(resize_keyboard = True, one_time_keyboard=True)
     for i in dep_list:
         deps.row(i)
@@ -51,6 +53,7 @@ def email_dep():
 def email_name(dep):
     data = database.SQL(database_name)
     name_list = data.emails_namelist(dep)
+    data.close()
     names = ReplyKeyboardMarkup(resize_keyboard = True, one_time_keyboard=True)
     for i in name_list:
         names.row(i)
@@ -63,3 +66,39 @@ def library_list(path):
     for i in list:
         liblist.row(i)
     return liblist
+
+def lib_years():
+    data = database.SQL(database_name)
+    list = data.get_lib_years()
+    data.close()
+    if len(list) != 0:
+        key = ReplyKeyboardMarkup(resize_keyboard = True, one_time_keyboard=True)
+        for i in list:
+            key.row(i[0])
+        return key
+    else:
+        return None
+
+def lib_lessons(year):
+    data = database.SQL(database_name)
+    list = data.get_lib_lessons(year)
+    data.close()
+    if len(list) != 0:
+        key = ReplyKeyboardMarkup(resize_keyboard = True, one_time_keyboard=True)
+        for i in list:
+            key.row(i[0])
+        return key
+    else:
+        return None
+
+def lib_aus(year, lesson):
+    data = database.SQL(database_name)
+    list = data.get_lib_aus(year, lesson)
+    data.close()
+    if len(list) != 0:
+        key = ReplyKeyboardMarkup(resize_keyboard = True, one_time_keyboard=True)
+        for i in list:
+            key.row(i[0])
+        return key
+    else:
+        return None
