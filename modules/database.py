@@ -1,6 +1,6 @@
 import sqlite3 as sq
 import os
-import help_functions as help
+import modules.help_functions as help
 from config import *
 
 def create_lists():

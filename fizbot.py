@@ -3,11 +3,11 @@
 from config import *
 import telebot
 import os
-import keyboards as key
-import storage
-import help_functions as help
+import modules.keyboards as key
+import modules.storage as storage
+import modules.help_functions as help
 import constants as c
-import database
+import modules.database as database
 import json
 from telebot.types import InputMediaPhoto
 
@@ -95,6 +95,162 @@ def get_mail(message):
         msg = bot.send_message(message.chat.id,"Виберіть викладача зі списку, будь ласка!")
         bot.register_next_step_handler(msg, get_mail)
 
+
+@bot.message_handler(commands=['schedule'])
+def whats_year(message):
+    storage.delete_all(message.chat.id)
+    storage.del_schedule_path(message.chat.id)
+    storage.update_schedule_path(message.chat.id,'schedule')
+    markup_year = key.stud_years()
+    markup_year.row("Вихід")
+    msg = bot.send_message(
+        message.chat.id,
+        "Розклад занять на фізичному факультеті.\nБудь ласка, оберіть курс зі списку.",
+        reply_markup = markup_year)
+    bot.register_next_step_handler(msg,whats_day)
+
+def whats_day(message):
+    if message.text in c.stud_years:
+        storage.update_schedule_path(
+            message.chat.id,
+            help.get_sch_folder(message.text)
+            )
+        markup_day = key.week_days()
+        markup_day.row("Назад")
+        msg = bot.send_message(
+            message.chat.id,
+            "Оберіть день.",
+            reply_markup=markup_day
+            )
+        bot.register_next_step_handler(msg,send_schedule)
+    elif message.text == "Вихід":
+        key_rem = telebot.types.ReplyKeyboardRemove()
+        bot.send_message(
+            message.chat.id,
+            "Список доступних команд:"+c.avaible_comands,
+            reply_markup=key_rem,
+            parse_mode = "Markdown"
+            )
+    else:
+        msg = bot.send_message(
+            message.chat.id,
+            "Виберіть варіант зі списку, будь ласка!"
+            )
+        bot.register_next_step_handler(msg,whats_day)
+
+def send_schedule(message):
+    bot.send_chat_action(message.chat.id, 'typing')
+    if message.text in c.week_days:
+        key_rem = telebot.types.ReplyKeyboardRemove()
+        if message.text != c.week_days[5]:
+            storage.update_schedule_path(
+                message.chat.id,
+                help.translate_day(message.text)
+                )
+            schedule = open(storage.get_schedule_path(message.chat.id), 'rb')
+            msg = bot.send_photo(
+                message.chat.id,
+                schedule,
+                reply_markup = key_rem
+                )
+            storage.del_schedule_path(message.chat.id)
+        elif message.text == c.week_days[5]:
+            sch = [storage.get_schedule_path(message.chat.id) + '/' + x for x in help.translate_day(message.text)]
+            bot.send_message(message.chat.id, "Розклад на тиждень:", reply_markup = key_rem)
+            with open(sch[0], 'rb') as p1 , open(sch[1], 'rb') as p2, open(sch[2], 'rb') as p3, open(sch[3], 'rb') as p4, open(sch[4], 'rb') as p5:
+                msg = bot.send_media_group(message.chat.id,
+                [InputMediaPhoto(p1),
+                InputMediaPhoto(p2),
+                InputMediaPhoto(p3),
+                InputMediaPhoto(p4),
+                InputMediaPhoto(p5)])
+    elif message.text == "Назад":
+        storage.schedule_step_back(message.chat.id)
+        markup_year = key.stud_years()
+        markup_year.row("Вихід")
+        msg = bot.send_message(
+            message.chat.id,
+            "Розклад занять на фізичному факультеті.\nБудь ласка, оберіть курс зі списку.",
+            reply_markup = markup_year)
+        bot.register_next_step_handler(msg,whats_day)
+
+    else:
+        msg = bot.send_message(message.chat.id,"Виберіть варіант зі списку, будь ласка!")
+        bot.register_next_step_handler(msg,send_schedule)
+
+
+@bot.message_handler(commands=['library'])
+def lib_start(message):
+    bot.send_message(message.chat.id,
+        "Усе майже готово. Бібліотека відкриється найближчим часом.")
+    # storage.delete_all(message.chat.id)
+    # storage.del_lib_path(message.chat.id)
+    # storage.update_lib_path(message.chat.id,'library')
+    # markup_lib = key.library_list(storage.get_lib_path(message.chat.id))
+    # markup_lib.row("Вихід")
+    # msg = bot.send_message(
+    #     message.chat.id,
+    #     "Архів літератури.\nБудь ласка, оберіть розділ/файл.",
+    #     reply_markup = markup_lib
+    #     )
+    # bot.register_next_step_handler(msg, lib_next_step)
+
+# def lib_next_step(message):
+    # if message.text == "Вихід":
+    #             key_rem = telebot.types.ReplyKeyboardRemove()
+    #             bot.send_message(
+    #                 message.chat.id,
+    #                 "Список доступних команд:"+c.avaible_comands,
+    #                 reply_markup=key_rem,
+    #                 parse_mode = "Markdown"
+    #                 )
+    # elif message.text == "Назад":
+    #     storage.lib_step_back(message.chat.id)
+    #     markup_lib = key.library_list(storage.get_lib_path(message.chat.id))
+    #     if storage.lib_at_start(message.chat.id):
+    #         markup_lib.row("Вихід")
+    #     else:
+    #         markup_lib.row("Назад")
+    #     msg = bot.send_message(message.chat.id,"Oберіть розділ/файл.",reply_markup = markup_lib)
+    #     bot.register_next_step_handler(msg, lib_next_step)
+    #
+    # elif os.path.exists(storage.get_lib_path(message.chat.id) + '/' + message.text):
+    #     storage.update_lib_path(message.chat.id,message.text)
+    #     if os.path.isfile(storage.get_lib_path(message.chat.id)):
+    #         key_rem = telebot.types.ReplyKeyboardRemove()
+    #         data = database.SQL(database_name)
+    #
+    #         if not data.sent_files_check(storage.get_lib_path(message.chat.id)):
+    #             file = open(storage.get_lib_path(message.chat.id), 'rb')
+    #             bot.send_message(message.chat.id, "Зачекайте, будь ласка.\nФайл надсилається.")
+    #             bot.send_chat_action(message.chat.id, 'upload_document')
+    #             msg = bot.send_document(message.chat.id, file, reply_markup = key_rem)
+    #             data.sent_files_add(storage.get_lib_path(message.chat.id), msg.document.file_id)
+    #         else:
+    #             file = data.sent_files_get_id(storage.get_lib_path(message.chat.id))
+    #             bot.send_chat_action(message.chat.id, 'upload_document')
+    #             msg = bot.send_document(message.chat.id, file, reply_markup = key_rem)
+    #
+    #     else:
+    #         markup_lib = key.library_list(storage.get_lib_path(message.chat.id))
+    #         markup_lib.row("Назад")
+    #         msg = bot.send_message(
+    #             message.chat.id,
+    #             "Oберіть розділ/файл.",
+    #             reply_markup = markup_lib
+    #             )
+    #         bot.register_next_step_handler(msg, lib_next_step)
+    # else:
+    #     markup_lib = key.library_list(storage.get_lib_path(message.chat.id))
+    #     msg = bot.send_message(
+    #         message.chat.id,
+    #         "Будь ласка, оберіть розділ/файл зі списку.",
+    #         reply_markup = markup_lib
+    #         )
+    #     bot.register_next_step_handler(msg, lib_next_step)
+
+
+# ADMIN COMMANDS
 
 @bot.message_handler(commands=['del_email'])
 def whats_dep_del(message):
@@ -191,164 +347,19 @@ def save_to_lib(message):
     data = database.SQL(database_name)
     for i in range(0, len(names)):
         data.add_book(names[i], links[i], year, lesson, aus)
+        bot.send_message(message.chat.id,
+        "Збережено!\n" + str(links[i]) +'\n'+str(names[i])+'\n'+str(year)+'\n'+str(lesson)+'\n'+str(aus),
+        reply_markup = key_rem)
+
     data.close()
     bot.send_message(message.chat.id,
-    "Збережено!",
+    "Йоу!",
     reply_markup = key_rem)
 
-@bot.message_handler(commands=['schedule'])
-def whats_year(message):
-    storage.delete_all(message.chat.id)
-    storage.del_schedule_path(message.chat.id)
-    storage.update_schedule_path(message.chat.id,'schedule')
-    markup_year = key.stud_years()
-    markup_year.row("Вихід")
-    msg = bot.send_message(
-        message.chat.id,
-        "Розклад занять на фізичному факультеті.\nБудь ласка, оберіть курс зі списку.",
-        reply_markup = markup_year)
-    bot.register_next_step_handler(msg,whats_day)
-
-def whats_day(message):
-    if message.text in c.stud_years:
-        storage.update_schedule_path(
-            message.chat.id,
-            help.get_sch_folder(message.text)
-            )
-        markup_day = key.week_days()
-        markup_day.row("Назад")
-        msg = bot.send_message(
-            message.chat.id,
-            "Оберіть день.",
-            reply_markup=markup_day
-            )
-        bot.register_next_step_handler(msg,send_schedule)
-    elif message.text == "Вихід":
-        key_rem = telebot.types.ReplyKeyboardRemove()
-        bot.send_message(
-            message.chat.id,
-            "Список доступних команд:"+c.avaible_comands,
-            reply_markup=key_rem,
-            parse_mode = "Markdown"
-            )
-    else:
-        msg = bot.send_message(
-            message.chat.id,
-            "Виберіть варіант зі списку, будь ласка!"
-            )
-        bot.register_next_step_handler(msg,whats_day)
-
-def send_schedule(message):
-    bot.send_chat_action(message.chat.id, 'typing')
-    if message.text in c.week_days:
-        key_rem = telebot.types.ReplyKeyboardRemove()
-        if message.text != c.week_days[5]:
-            storage.update_schedule_path(
-                message.chat.id,
-                help.translate_day(message.text)
-                )
-            schedule = open(storage.get_schedule_path(message.chat.id), 'rb')
-            msg = bot.send_photo(
-                message.chat.id,
-                schedule,
-                reply_markup = key_rem
-                )
-            storage.del_schedule_path(message.chat.id)
-        elif message.text == c.week_days[5]:
-            sch = [storage.get_schedule_path(message.chat.id) + '/' + x for x in help.translate_day(message.text)]
-            bot.send_message(message.chat.id, "Розклад на тиждень:", reply_markup = key_rem)
-            with open(sch[0], 'rb') as p1 , open(sch[1], 'rb') as p2, open(sch[2], 'rb') as p3, open(sch[3], 'rb') as p4, open(sch[4], 'rb') as p5:
-                msg = bot.send_media_group(message.chat.id,
-                [InputMediaPhoto(p1),
-                InputMediaPhoto(p2),
-                InputMediaPhoto(p3),
-                InputMediaPhoto(p4),
-                InputMediaPhoto(p5)])
-    elif message.text == "Назад":
-        storage.schedule_step_back(message.chat.id)
-        markup_year = key.stud_years()
-        markup_year.row("Вихід")
-        msg = bot.send_message(
-            message.chat.id,
-            "Розклад занять на фізичному факультеті.\nБудь ласка, оберіть курс зі списку.",
-            reply_markup = markup_year)
-        bot.register_next_step_handler(msg,whats_day)
-
-    else:
-        msg = bot.send_message(message.chat.id,"Виберіть варіант зі списку, будь ласка!")
-        bot.register_next_step_handler(msg,send_schedule)
-
-
-@bot.message_handler(commands=['library'])
-def lib_start(message):
-    bot.send_message(message.chat.id,
-        "Усе майже готово. Бібліотека відкриється найближчим часом(після сесії).")
-    # storage.delete_all(message.chat.id)
-    # storage.del_lib_path(message.chat.id)
-    # storage.update_lib_path(message.chat.id,'library')
-    # markup_lib = key.library_list(storage.get_lib_path(message.chat.id))
-    # markup_lib.row("Вихід")
-    # msg = bot.send_message(
-    #     message.chat.id,
-    #     "Архів літератури.\nБудь ласка, оберіть розділ/файл.",
-    #     reply_markup = markup_lib
-    #     )
-    # bot.register_next_step_handler(msg, lib_next_step)
-
-# def lib_next_step(message):
-    # if message.text == "Вихід":
-    #             key_rem = telebot.types.ReplyKeyboardRemove()
-    #             bot.send_message(
-    #                 message.chat.id,
-    #                 "Список доступних команд:"+c.avaible_comands,
-    #                 reply_markup=key_rem,
-    #                 parse_mode = "Markdown"
-    #                 )
-    # elif message.text == "Назад":
-    #     storage.lib_step_back(message.chat.id)
-    #     markup_lib = key.library_list(storage.get_lib_path(message.chat.id))
-    #     if storage.lib_at_start(message.chat.id):
-    #         markup_lib.row("Вихід")
-    #     else:
-    #         markup_lib.row("Назад")
-    #     msg = bot.send_message(message.chat.id,"Oберіть розділ/файл.",reply_markup = markup_lib)
-    #     bot.register_next_step_handler(msg, lib_next_step)
-    #
-    # elif os.path.exists(storage.get_lib_path(message.chat.id) + '/' + message.text):
-    #     storage.update_lib_path(message.chat.id,message.text)
-    #     if os.path.isfile(storage.get_lib_path(message.chat.id)):
-    #         key_rem = telebot.types.ReplyKeyboardRemove()
-    #         data = database.SQL(database_name)
-    #
-    #         if not data.sent_files_check(storage.get_lib_path(message.chat.id)):
-    #             file = open(storage.get_lib_path(message.chat.id), 'rb')
-    #             bot.send_message(message.chat.id, "Зачекайте, будь ласка.\nФайл надсилається.")
-    #             bot.send_chat_action(message.chat.id, 'upload_document')
-    #             msg = bot.send_document(message.chat.id, file, reply_markup = key_rem)
-    #             data.sent_files_add(storage.get_lib_path(message.chat.id), msg.document.file_id)
-    #         else:
-    #             file = data.sent_files_get_id(storage.get_lib_path(message.chat.id))
-    #             bot.send_chat_action(message.chat.id, 'upload_document')
-    #             msg = bot.send_document(message.chat.id, file, reply_markup = key_rem)
-    #
-    #     else:
-    #         markup_lib = key.library_list(storage.get_lib_path(message.chat.id))
-    #         markup_lib.row("Назад")
-    #         msg = bot.send_message(
-    #             message.chat.id,
-    #             "Oберіть розділ/файл.",
-    #             reply_markup = markup_lib
-    #             )
-    #         bot.register_next_step_handler(msg, lib_next_step)
-    # else:
-    #     markup_lib = key.library_list(storage.get_lib_path(message.chat.id))
-    #     msg = bot.send_message(
-    #         message.chat.id,
-    #         "Будь ласка, оберіть розділ/файл зі списку.",
-    #         reply_markup = markup_lib
-    #         )
-    #     bot.register_next_step_handler(msg, lib_next_step)
-
+@bot.message_handler(commands=['get_database'])
+def get_database(message):
+     file = open("data.db", 'rb')
+     bot.send_document(message.chat.id, file)
 
 
 

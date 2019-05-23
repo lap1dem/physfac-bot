@@ -3,7 +3,7 @@ from telebot.types import (
 )
 from config import *
 import constants
-import database
+from modules import database
 import os
 # import storage
 
