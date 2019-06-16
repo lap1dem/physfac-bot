@@ -7,9 +7,10 @@ import random
 
 import numpy as np
 from openpyxl import load_workbook
-cp = os.getcwd()
-wb = load_workbook(filename = cp+'/Мінка кванти.xlsx')
+ex = os.path.abspath("Мінка кванти.xlsx")
+wb = load_workbook(ex)
 cons = wb[wb.sheetnames[0]]
+
 
 # %%
 def get_question():
