@@ -369,8 +369,8 @@ def minka(message):
         bot.send_message(message.chat.id, 'Окей, удачі на мінці!', reply_markup = key_rem)
     else:
         reply = key.minka_key()
-        q = qmminka.get_question()
-        bot.send_message(message.chat.id, q, reply_markup = reply)
+        que = qmminka.get_question()
+        bot.send_message(message.chat.id, que, reply_markup = reply)
         bot.register_next_step_handler(message, minka)
 
 
