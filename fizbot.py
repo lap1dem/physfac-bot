@@ -367,11 +367,19 @@ def minka(message):
     if message.text == 'Хватє':
         key_rem = telebot.types.ReplyKeyboardRemove()
         bot.send_message(message.chat.id, 'Окей, удачі на мінці!', reply_markup = key_rem)
+        bot.send_sticker(message.chat.id, 'CAADAgADaQADrKqGF8Qij6L82sPwAg')
     else:
         reply = key.minka_key()
         que = qmminka.get_question()
         bot.send_message(message.chat.id, que, reply_markup = reply)
         bot.register_next_step_handler(message, minka)
+
+@bot.message_handler(commands=['getstid'])
+def getstid(message):
+    bot.send_message(message.chat.id, "Окей, надішліть файл.")
+    bot.register_next_step_handler(message, getsticid)
+def getsticid(message):
+    bot.send_message(message.chat.id, message.sticker.file_id)
 
 
 
