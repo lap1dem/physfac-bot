@@ -102,3 +102,10 @@ def lib_aus(year, lesson):
         return key
     else:
         return None
+
+def minka_key():
+    # Список курсів
+    key = ReplyKeyboardMarkup(resize_keyboard=True,one_time_keyboard=True)
+    key.row('Ще питання')
+    key.row('Хватє')
+    return key

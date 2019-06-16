@@ -5,6 +5,7 @@ import telebot
 import os
 import modules.keyboards as key
 import modules.storage as storage
+import qmminka
 import modules.help_functions as help
 import constants as c
 import modules.database as database
@@ -360,6 +361,18 @@ def save_to_lib(message):
 def get_database(message):
      file = open("data.db", 'rb')
      bot.send_document(message.chat.id, file)
+
+@bot.message_handler(commands=['minka'])
+def minka(message):
+    if message.text == 'Хватє':
+        key_rem = telebot.types.ReplyKeyboardRemove()
+        bot.send_message(message.chat.id, 'Окей, удачі на мінці!', reply_markup = key_rem)
+    else:
+        reply = key.minka_key()
+        q = qmminka.get_question()
+        bot.send_message(message.chat.id, q, reply_markup = reply)
+        bot.register_next_step_handler(message, minka)
+
 
 
 
