@@ -8,7 +8,7 @@ import modules.storage as storage
 import qmminka
 import modules.help_functions as help
 import constants as c
-import modules.database as database
+import modules.psql_tools as data
 import json
 from telebot.types import InputMediaPhoto
 
@@ -27,8 +27,6 @@ def start(message):
         msg,
         parse_mode = "Markdown"
     )
-    data = database.SQL(database_name)
-    data.add_user(message.chat.id)
 
 @bot.message_handler(commands=['about'])
 def about(message):
@@ -53,7 +51,6 @@ def whats_dep(message):
     bot.register_next_step_handler(msg, whats_name)
 
 def whats_name(message):
-    data = database.SQL(database_name)
     if message.text == "Вихід":
         key_rem = telebot.types.ReplyKeyboardRemove()
         bot.send_message(
@@ -72,16 +69,15 @@ def whats_name(message):
             reply_markup = markup_name
             )
         bot.register_next_step_handler(msg, get_mail)
-    elif len(data.search_by_name('"%{}%"'.format(message.text,))) == 1:
+    elif len(data.search_by_name('%{}%'.format(message.text,))) == 1:
         key_rem = telebot.types.ReplyKeyboardRemove()
-        email = data.search_by_name('"%{}%"'.format(message.text,))
+        email = data.search_by_name('%{}%'.format(message.text,))
         bot.send_message(message.chat.id, email[0][0] +'\n'+ email[0][1], reply_markup = key_rem)
     else:
         msg = bot.send_message(message.chat.id,"Сформулюйте запит точніше, будь ласка.")
         bot.register_next_step_handler(msg, whats_name)
 
 def get_mail(message):
-    data = database.SQL(database_name)
     if message.text == "Назад":
         whats_dep(message)
     elif message.text in data.emails_namelist(storage.get_edep(message.chat.id)):

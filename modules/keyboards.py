@@ -3,7 +3,7 @@ from telebot.types import (
 )
 from config import *
 import constants
-from modules import database
+import modules.psql_tools as data
 import os
 # import storage
 
@@ -26,9 +26,7 @@ def week_days():
     return key
 
 def groups_for_year(year):
-    data = database.SQL(database_name)
     group_list = data.get_groups_for_year(year)
-    data.close()
     groups = ReplyKeyboardMarkup(resize_keyboard = True, one_time_keyboard=True)
     for i in group_list:
         groups.row(i)
@@ -42,18 +40,14 @@ def departments():
     return key
 
 def email_dep():
-    data = database.SQL(database_name)
     dep_list = data.emails_deplist()
-    data.close()
     deps = ReplyKeyboardMarkup(resize_keyboard = True, one_time_keyboard=True)
     for i in dep_list:
         deps.row(i)
     return deps
 
 def email_name(dep):
-    data = database.SQL(database_name)
     name_list = data.emails_namelist(dep)
-    data.close()
     names = ReplyKeyboardMarkup(resize_keyboard = True, one_time_keyboard=True)
     for i in name_list:
         names.row(i)
@@ -68,9 +62,7 @@ def library_list(path):
     return liblist
 
 def lib_years():
-    data = database.SQL(database_name)
     list = data.get_lib_years()
-    data.close()
     if len(list) != 0:
         key = ReplyKeyboardMarkup(resize_keyboard = True, one_time_keyboard=True)
         for i in list:
@@ -80,9 +72,7 @@ def lib_years():
         return None
 
 def lib_lessons(year):
-    data = database.SQL(database_name)
     list = data.get_lib_lessons(year)
-    data.close()
     if len(list) != 0:
         key = ReplyKeyboardMarkup(resize_keyboard = True, one_time_keyboard=True)
         for i in list:
@@ -92,9 +82,7 @@ def lib_lessons(year):
         return None
 
 def lib_aus(year, lesson):
-    data = database.SQL(database_name)
     list = data.get_lib_aus(year, lesson)
-    data.close()
     if len(list) != 0:
         key = ReplyKeyboardMarkup(resize_keyboard = True, one_time_keyboard=True)
         for i in list:
