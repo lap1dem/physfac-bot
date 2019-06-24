@@ -81,44 +81,8 @@ def get_edata(chat_id):
         except KeyError:
             return None
 
-# -----------OLD-LIBRARY-----------------------------
-def update_lib_path(chat_id,repository):
-    with sh.open(shelve_name) as storage:
-        try:
-            cur_path = storage['lib'+str(chat_id)]
-            storage['lib'+str(chat_id)] = cur_path + '/' + repository
-        except KeyError:
-            storage['lib'+str(chat_id)] = repository
 
-def del_lib_path(chat_id):
-    with sh.open(shelve_name) as storage:
-        try:
-            del storage['lib'+str(chat_id)]
-        except KeyError:
-            pass
-
-def get_lib_path(chat_id):
-    with sh.open(shelve_name) as storage:
-        try:
-            return storage['lib'+str(chat_id)]
-        except KeyError:
-            return None
-
-def replace_lib_path(chat_id, path):
-    with sh.open(shelve_name) as storage:
-        storage['lib'+str(chat_id)] = path
-
-def lib_step_back(chat_id):
-    cur_path = get_lib_path(chat_id)
-    new_path = os.path.split(cur_path)[0]
-    replace_lib_path(chat_id, new_path)
-
-def lib_at_start(chat_id):
-    if os.path.split(get_lib_path(chat_id))[0] == '':
-        return True
-    return False
-
-# -----------NEW-LIBRARY-----------------------------
+# ---------------LIBRARY-----------------------------
 def libUpdName(chat_id, name):
     with sh.open(shelve_name) as storage:
         try:
@@ -160,6 +124,13 @@ def libGetLesson(chat_id):
     with sh.open(shelve_name) as storage:
         try:
             return storage['lib_l'+str(chat_id)]
+        except KeyError:
+            return None
+
+def libGetAus(chat_id):
+    with sh.open(shelve_name) as storage:
+        try:
+            return storage['lib_a'+str(chat_id)]
         except KeyError:
             return None
 

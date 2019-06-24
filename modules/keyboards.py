@@ -53,13 +53,6 @@ def email_name(dep):
         names.row(i)
     return names
 
-def library_list(path):
-    list = os.listdir(work_dir + '/' + path)
-    list.sort()
-    liblist = ReplyKeyboardMarkup(resize_keyboard = True, one_time_keyboard=True)
-    for i in list:
-        liblist.row(i)
-    return liblist
 
 def lib_years():
     list = data.get_lib_years()
@@ -82,10 +75,22 @@ def lib_lessons(year):
         return None
 
 def lib_aus(year, lesson):
-    list = data.get_lib_aus(year, lesson)
-    if len(list) != 0:
+    aus, names = data.get_lib_aus(year, lesson)
+    if len(aus) != 0 or len(names) != 0:
         key = ReplyKeyboardMarkup(resize_keyboard = True, one_time_keyboard=True)
-        for i in list:
+        for i in aus:
+            key.row(i[0])
+        for i in names:
+            key.row(i[0])
+        return key
+    else:
+        return None
+
+def lib_files(year, lesson, aus):
+    names = data.get_lib_names(year, lesson, aus)
+    if len(aus) != 0 or len(names) != 0:
+        key = ReplyKeyboardMarkup(resize_keyboard = True, one_time_keyboard=True)
+        for i in names:
             key.row(i[0])
         return key
     else:

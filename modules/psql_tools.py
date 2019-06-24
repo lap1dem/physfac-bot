@@ -124,6 +124,12 @@ def get_lib_aus(conn, cur, year, lesson):
     return (aus, names)
 
 @data_conn
+def get_lib_names(conn, cur, year, lesson, aus):
+    cur.execute("SELECT DISTINCT name FROM library WHERE year = %s AND lesson = %s AND aus = %s", (year, lesson,aus,))
+    names = cur.fetchall()
+    return names
+
+@data_conn
 def add_book(conn, cur, name, link, year, lesson, aus):
     if not bool(get_book(name)):
         cur.execute("INSERT INTO library (name, link, year, lesson, aus) VALUES (%s,%s,%s,%s,%s)",(name, link, year, lesson, aus,))
