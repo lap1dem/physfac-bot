@@ -143,30 +143,20 @@ def libGetAll(chat_id):
         aus = storage['lib_a'+str(chat_id)]
         return [names, links, year, lesson, aus]
 
-
-# -------------OTHER--------------------------------
-def check_running(chat_id):
+def libUpdChoosed(chat_id, bookname):
     with sh.open(shelve_name) as storage:
         try:
-            key_check = storage["run_"+str(chat_id)]
-            return True
+            names = json.loads(storage['lib_ch'+str(chat_id)])
+            names.append(bookname)
+            storage['lib_ch'+str(chat_id)] = json.dumps(names)
         except KeyError:
-            return False
+            storage['lib_ch'+str(chat_id)] = json.dumps([bookname])
 
-# def update_prev(chat_id, text):
-#     with sh.open(shelve_name) as storage:
-#         storage['prev'+str(chat_id)] = text
-#
-# def del_prev(chat_id):
-#     with sh.open(shelve_name) as storage:
-#         try:
-#             del storage['prev'+str(chat_id)]
-#         except KeyError:
-#             pass
-#
-# def get_prev(chat_id):
-#     with sh.open(shelve_name) as storage:
-#         try:
-#             return storage['prev'+str(chat_id)]
-#         except KeyError:
-#             return None
+def libGetChoosed(chat_id):
+    with sh.open(shelve_name) as storage:
+        try:
+            return json.loads(storage['lib_ch'+str(chat_id)])
+        except KeyError:
+            return []
+
+# -------------OTHER--------------------------------

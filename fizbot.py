@@ -181,7 +181,7 @@ def lib_start(message):
     storage.delete_all(message.chat.id)
     bot.send_message(message.chat.id,
         "Бібліотека працює в тестовому режимі.")
-    markup_years = key.lib_years()
+    markup_years = key.lib_years(message.chat.id)
     markup_years.row('Вихід')
     msg = bot.send_message(
         message.chat.id,
@@ -199,6 +199,12 @@ def lib_year(message):
                     reply_markup=key_rem,
                     parse_mode = "Markdown"
                     )
+    elif message.text == "Отримати літературу":
+        names = storage.libGetChoosed(message.chat.id)
+        key_rem = telebot.types.ReplyKeyboardRemove()
+        for name in names:
+            link = data.get_book(name)[0]
+            bot.send_document(message.chat.id, link, reply_markup = key_rem)
     elif message.text not in [k[0] for k in data.get_lib_years()]:
         msg = bot.send_message(
             message.chat.id,
@@ -207,7 +213,7 @@ def lib_year(message):
         bot.register_next_step_handler(msg, lib_year)
     else:
         storage.libSetYear(message.chat.id, message.text)
-        markup_lessons = key.lib_lessons(message.text)
+        markup_lessons = key.lib_lessons(message.text, message.chat.id)
         markup_lessons.row('Назад')
         msg = bot.send_message(
             message.chat.id,
@@ -218,7 +224,7 @@ def lib_year(message):
 
 def lib_lesson(message):
     if message.text == "Назад":
-        markup_years = key.lib_years()
+        markup_years = key.lib_years(message.chat.id)
         markup_years.row('Вихід')
         msg = bot.send_message(
             message.chat.id,
@@ -226,6 +232,12 @@ def lib_lesson(message):
             reply_markup = markup_years
             )
         bot.register_next_step_handler(msg, lib_year)
+    elif message.text == "Отримати літературу":
+        names = storage.libGetChoosed(message.chat.id)
+        key_rem = telebot.types.ReplyKeyboardRemove()
+        for name in names:
+            link = data.get_book(name)[0]
+            bot.send_document(message.chat.id, link, reply_markup = key_rem)
     elif message.text not in [k[0] for k in data.get_lib_lessons(storage.libGetYear(message.chat.id))]:
         msg = bot.send_message(
             message.chat.id,
@@ -234,7 +246,7 @@ def lib_lesson(message):
         bot.register_next_step_handler(msg, lib_year)
     else:
         storage.libSetLesson(message.chat.id, message.text)
-        markup_aus = key.lib_aus(storage.libGetYear(message.chat.id), message.text)
+        markup_aus = key.lib_aus(storage.libGetYear(message.chat.id), message.text, message.chat.id)
         markup_aus.row('Назад')
         msg = bot.send_message(
             message.chat.id,
@@ -245,7 +257,7 @@ def lib_lesson(message):
 
 def lib_aus(message):
     if message.text == "Назад":
-        markup_lessons = key.lib_lessons(storage.libGetYear(message.chat.id))
+        markup_lessons = key.lib_lessons(storage.libGetYear(message.chat.id), message.chat.id)
         markup_lessons.row('Назад')
         msg = bot.send_message(
             message.chat.id,
@@ -253,6 +265,12 @@ def lib_aus(message):
             reply_markup = markup_lessons
             )
         bot.register_next_step_handler(msg, lib_lesson)
+    elif message.text == "Отримати літературу":
+        names = storage.libGetChoosed(message.chat.id)
+        key_rem = telebot.types.ReplyKeyboardRemove()
+        for name in names:
+            link = data.get_book(name)[0]
+            bot.send_document(message.chat.id, link, reply_markup = key_rem)
     elif message.text not in [k[0] for k in data.get_lib_aus(storage.libGetYear(message.chat.id), storage.libGetLesson(message.chat.id))[0]]+[k[0] for k in data.get_lib_aus(storage.libGetYear(message.chat.id), storage.libGetLesson(message.chat.id))[1]]:
         msg = bot.send_message(
             message.chat.id,
@@ -261,12 +279,18 @@ def lib_aus(message):
         bot.register_next_step_handler(msg, lib_aus)
     else:
         if message.text in [k[0] for k in data.get_lib_aus(storage.libGetYear(message.chat.id), storage.libGetLesson(message.chat.id))[1]]:
-            link = data.get_book(message.text)[0]
-            key_rem = telebot.types.ReplyKeyboardRemove()
-            bot.send_document(message.chat.id, link, reply_markup = key_rem)
+            storage.libUpdChoosed(message.chat.id, message.text)
+            markup_aus = key.lib_aus(storage.libGetYear(message.chat.id), storage.libGetLesson(message.chat.id), message.chat.id)
+            markup_aus.row('Назад')
+            msg = bot.send_message(
+                message.chat.id,
+                "Файл додано до списку.",
+                reply_markup = markup_aus
+                )
+            bot.register_next_step_handler(msg, lib_aus)
         else:
             storage.libSetAus(message.chat.id, message.text)
-            markup_files = key.lib_files(storage.libGetYear(message.chat.id), storage.libGetLesson(message.chat.id), message.text)
+            markup_files = key.lib_files(storage.libGetYear(message.chat.id), storage.libGetLesson(message.chat.id), message.text, message.chat.id)
             markup_files.row('Назад')
             msg = bot.send_message(
                 message.chat.id,
@@ -276,7 +300,7 @@ def lib_aus(message):
             bot.register_next_step_handler(msg, lib_finally)
 def lib_finally(message):
     if message.text == "Назад":
-        markup_aus =  key.lib_aus(storage.libGetYear(message.chat.id), storage.libGetLesson(message.chat.id))
+        markup_aus =  key.lib_aus(storage.libGetYear(message.chat.id), storage.libGetLesson(message.chat.id), message.chat.id)
         markup_aus.row('Назад')
         msg = bot.send_message(
             message.chat.id,
@@ -284,6 +308,12 @@ def lib_finally(message):
             reply_markup = markup_aus
             )
         bot.register_next_step_handler(msg, lib_aus)
+    elif message.text == "Отримати літературу":
+        names = storage.libGetChoosed(message.chat.id)
+        key_rem = telebot.types.ReplyKeyboardRemove()
+        for name in names:
+            link = data.get_book(name)[0]
+            bot.send_document(message.chat.id, link, reply_markup = key_rem)
     elif message.text not in [k[0] for k in data.get_lib_names(storage.libGetYear(message.chat.id), storage.libGetLesson(message.chat.id), storage.libGetAus(message.chat.id))]:
         msg = bot.send_message(
             message.chat.id,
@@ -291,9 +321,15 @@ def lib_finally(message):
             )
         bot.register_next_step_handler(msg, lib_finally)
     else:
-        link = data.get_book(message.text)[0]
-        key_rem = telebot.types.ReplyKeyboardRemove()
-        bot.send_document(message.chat.id, link, reply_markup = key_rem)
+        storage.libUpdChoosed(message.chat.id, message.text)
+        markup_files = key.lib_files(storage.libGetYear(message.chat.id), storage.libGetLesson(message.chat.id), storage.libGetAus(message.chat.id), message.chat.id)
+        markup_files.row('Назад')
+        msg = bot.send_message(
+            message.chat.id,
+            "Файл додано до списку.",
+            reply_markup = markup_files
+            )
+        bot.register_next_step_handler(msg, lib_finally)
 
 
 

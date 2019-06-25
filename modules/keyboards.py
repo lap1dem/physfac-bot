@@ -5,7 +5,7 @@ from config import *
 import constants
 import modules.psql_tools as data
 import os
-# import storage
+import modules.storage as storage
 
 work_dir = os.getcwd()
 
@@ -54,30 +54,36 @@ def email_name(dep):
     return names
 
 
-def lib_years():
+def lib_years(chat_id):
     list = data.get_lib_years()
     if len(list) != 0:
         key = ReplyKeyboardMarkup(resize_keyboard = True, one_time_keyboard=True)
+        if len(storage.libGetChoosed(chat_id)) != 0:
+            key.row('Отримати літературу')
         for i in list:
             key.row(i[0])
         return key
     else:
         return None
 
-def lib_lessons(year):
+def lib_lessons(year, chat_id):
     list = data.get_lib_lessons(year)
     if len(list) != 0:
         key = ReplyKeyboardMarkup(resize_keyboard = True, one_time_keyboard=True)
+        if len(storage.libGetChoosed(chat_id)) != 0:
+            key.row('Отримати літературу')
         for i in list:
             key.row(i[0])
         return key
     else:
         return None
 
-def lib_aus(year, lesson):
+def lib_aus(year, lesson, chat_id):
     aus, names = data.get_lib_aus(year, lesson)
     if len(aus) != 0 or len(names) != 0:
         key = ReplyKeyboardMarkup(resize_keyboard = True, one_time_keyboard=True)
+        if len(storage.libGetChoosed(chat_id)) != 0:
+            key.row('Отримати літературу')
         for i in aus:
             key.row(i[0])
         for i in names:
@@ -86,10 +92,12 @@ def lib_aus(year, lesson):
     else:
         return None
 
-def lib_files(year, lesson, aus):
+def lib_files(year, lesson, aus, chat_id):
     names = data.get_lib_names(year, lesson, aus)
     if len(aus) != 0 or len(names) != 0:
         key = ReplyKeyboardMarkup(resize_keyboard = True, one_time_keyboard=True)
+        if len(storage.libGetChoosed(chat_id)) != 0:
+            key.row('Отримати літературу')
         for i in names:
             key.row(i[0])
         return key
