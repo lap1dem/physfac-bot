@@ -9,7 +9,7 @@ DATABASE_URL = os.environ['DATABASE_URL']
 def data_conn(to_execute):
     def wrapper(*args):
         try:
-            conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+            conn = psql.connect(DATABASE_URL, sslmode='require')
             cur = conn.cursor()
 
             res = to_execute(conn, cur, *args)
