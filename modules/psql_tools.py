@@ -4,6 +4,7 @@ import os
 import modules.help_functions as help
 
 DATABASE_URL = os.environ['DATABASE_URL']
+# DATABASE_URL = "postgres://kqkttvkkxyiepn:3ec572c73369eb3fa9c0a2e2726d52621f008ac4b6b6bfbc9fcd5755f3e2825f@ec2-46-137-188-105.eu-west-1.compute.amazonaws.com:5432/d6fov5rlijed05"
 
 # %%
 def data_conn(to_execute):
@@ -109,12 +110,14 @@ def get_lib_years(conn, cur):
 
 @data_conn
 def get_lib_lessons(conn, cur, year):
+    year = year.split(",")[0]
     cur.execute("SELECT DISTINCT lesson FROM library WHERE year = %s", (year,))
     lessons = cur.fetchall()
     return lessons
 
 @data_conn
 def get_lib_aus(conn, cur, year, lesson):
+    year = year.split(",")[0]
     cur.execute("SELECT DISTINCT aus FROM library WHERE year = %s AND lesson = %s AND NOT aus = %s", (year, lesson, '*',))
     aus = cur.fetchall()
     cur.execute("SELECT DISTINCT name FROM library WHERE year = %s AND lesson = %s AND aus = %s", (year, lesson,'*',))
@@ -130,7 +133,8 @@ def get_lib_names(conn, cur, year, lesson, aus):
 @data_conn
 def add_book(conn, cur, name, link, year, lesson, aus):
     if not bool(get_book(name)):
-        cur.execute("INSERT INTO library (name, link, year, lesson, aus) VALUES (%s,%s,%s,%s,%s)",(name, link, year, lesson, aus,))
+        for y in year.split(","):
+            cur.execute("INSERT INTO library (name, link, year, lesson, aus) VALUES (%s,%s,%s,%s,%s)",(name, link, y, lesson, aus,))
     else:
         pass
     conn.commit()

@@ -14,6 +14,8 @@ from telebot.types import InputMediaPhoto
 
 bot = telebot.TeleBot(token)
 
+print("Bot started")
+
 @bot.message_handler(commands=['test'])
 def test(message):
     storage.delete_all(message.chat.id)
@@ -397,7 +399,7 @@ def add_book(message):
 def add_year(message):
     storage.libUpdLink(message.chat.id,message.document.file_id)
     storage.libUpdName(message.chat.id,message.document.file_name)
-    markup_year = key.lib_years()
+    markup_year = key.lib_years(message.chat.id)
     msg = bot.send_message(message.chat.id,
         "Надішліть ще один файл або ведіть назву первинної директорії (рекомендовано назву курсу)"+\
         " або виберіть зі списку. Якщо файл відноситься до кількох курсів - "+\
@@ -410,7 +412,7 @@ def add_lesson(message):
         return add_year(message)
     else:
         storage.libSetYear(message.chat.id,message.text)
-        markup_lesson = key.lib_lessons(message.text)
+        markup_lesson = key.lib_lessons(message.text, message.chat.id)
         msg = bot.send_message(message.chat.id,
         "Введіть вторинну директорію (рекомендовано назву предмету; * якщо відсутні).",
         reply_markup = markup_lesson)
@@ -418,7 +420,7 @@ def add_lesson(message):
 
 def add_aus(message):
     storage.libSetLesson(message.chat.id,message.text)
-    markup_aus = key.lib_aus(storage.libGetYear(message.chat.id), message.text)
+    markup_aus = key.lib_aus(storage.libGetYear(message.chat.id), message.text, message.chat.id)
     msg = bot.send_message(message.chat.id,
     "Введіть імʼя автора або директорію третього рівня(* якщо відстутні).",
     reply_markup = markup_aus)
@@ -428,14 +430,12 @@ def save_to_lib(message):
     storage.libSetAus(message.chat.id,message.text)
     key_rem = telebot.types.ReplyKeyboardRemove()
     names, links, year, lesson, aus = storage.libGetAll(message.chat.id)
-    data = database.SQL(database_name)
     for i in range(0, len(names)):
         data.add_book(names[i], links[i], year, lesson, aus)
         bot.send_message(message.chat.id,
         "Збережено!\n" + str(links[i]) +'\n'+str(names[i])+'\n'+str(year)+'\n'+str(lesson)+'\n'+str(aus),
         reply_markup = key_rem)
 
-    data.close()
     bot.send_message(message.chat.id,
     "Йоу!",
     reply_markup = key_rem)

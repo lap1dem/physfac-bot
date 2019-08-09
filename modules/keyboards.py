@@ -56,6 +56,7 @@ def email_name(dep):
 
 def lib_years(chat_id):
     list = data.get_lib_years()
+    list.sort()
     if len(list) != 0:
         key = ReplyKeyboardMarkup(resize_keyboard = True, one_time_keyboard=True)
         if len(storage.libGetChoosed(chat_id)) != 0:
