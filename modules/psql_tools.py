@@ -7,11 +7,9 @@ import modules.help_functions as help
 def data_conn(to_execute):
     def wrapper(*args):
         try:
-            conn = psql.connect(database = "d6fov5rlijed05",
-                                    user = "kqkttvkkxyiepn",
-                                    password = "3ec572c73369eb3fa9c0a2e2726d52621f008ac4b6b6bfbc9fcd5755f3e2825f",
-                                    host = "ec2-46-137-188-105.eu-west-1.compute.amazonaws.com",
-                                    port = "5432",)
+            DATABASE_URL = os.environ['DATABASE_URL']
+
+            conn = psycopg2.connect(DATABASE_URL, sslmode='require')
             cur = conn.cursor()
 
             res = to_execute(conn, cur, *args)
