@@ -3,12 +3,12 @@ import psycopg2 as psql
 import os
 import modules.help_functions as help
 
+DATABASE_URL = os.environ['DATABASE_URL']
+
 # %%
 def data_conn(to_execute):
     def wrapper(*args):
         try:
-            DATABASE_URL = os.environ['DATABASE_URL']
-
             conn = psycopg2.connect(DATABASE_URL, sslmode='require')
             cur = conn.cursor()
 
