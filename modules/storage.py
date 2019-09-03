@@ -160,3 +160,13 @@ def libGetChoosed(chat_id):
             return []
 
 # -------------OTHER--------------------------------
+def qmm_setsem(chat_id, sem):
+    with sh.open(shelve_name) as storage:
+        storage['qmmsem'+str(chat_id)] = sem
+
+def qmm_getsem(chat_id):
+    with sh.open(shelve_name) as storage:
+        try:
+            return storage['qmmsem'+str(chat_id)]
+        except KeyError:
+            return []

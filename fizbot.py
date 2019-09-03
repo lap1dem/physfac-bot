@@ -5,7 +5,7 @@ import telebot
 import os
 import modules.keyboards as key
 import modules.storage as storage
-import qmminka
+import qm_minka
 import modules.help_functions as help
 import constants as c
 import modules.psql_tools as data
@@ -18,16 +18,40 @@ print("Bot started")
 
 @bot.message_handler(commands=['test'])
 def test(message):
-    storage.delete_all(message.chat.id)
+    # storage.delete_all(message.chat.id)
+    pass
 
 @bot.message_handler(commands=['start'])
 def start(message):
+    fullname = message.from_user.first_name
+    try:
+        fullname += ' '
+        fullname += message.from_user.last_name
+    except TypeError:
+        pass
+    data.check_reg(message.chat.id,
+                   message.from_user.username,
+                   fullname)
+
     msg = """Вітаю!\nЯ - бот, написаний для студентів фізичного факультету КНУ.
-    \nСписок доступних команд:"""+c.avaible_comands+"""\nКоманди також можна вибирати натиснувши кнопку |/| на панелі внизу."""
+    \nСписок доступних команд:"""+c.avaible_comands+"""\nКоманди також можна вибирати натиснувши кнопку |/| на панелі внизу.
+    \nЯкщо бот пропонує вибір, а меню вибору не з'явилося - натисніть кнопку |88| на панелі внизу."""
     bot.send_message(
         message.chat.id,
         msg,
         parse_mode = "Markdown"
+    )
+
+@bot.message_handler(commands=['regusers'])
+def reg_users(message):
+    names = data.registrated_users()
+    strnames = ""
+    for name in names:
+        strnames += name[0]
+        strnames += '\n'
+    bot.send_message(
+        message.chat.id,
+        strnames
     )
 
 @bot.message_handler(commands=['about'])
@@ -445,17 +469,24 @@ def get_database(message):
      file = open("data.db", 'rb')
      bot.send_document(message.chat.id, file)
 
-@bot.message_handler(commands=['minka'])
-def minka(message):
+@bot.message_handler(commands=['qmminka'])
+def qmminka_start(message):
+    reply = key.minkasem_key()
+    bot.send_message(message.chat.id, 'Оберіть семестр.', reply_markup = reply)
+    bot.register_next_step_handler(message, qmminka)
+def qmminka(message):
+    if message.text != 'Хватє' and message.text != 'Ще питання':
+        storage.qmm_setsem(message.chat.id, message.text)
     if message.text == 'Хватє':
         key_rem = telebot.types.ReplyKeyboardRemove()
         bot.send_message(message.chat.id, 'Окей, удачі на мінці!', reply_markup = key_rem)
         bot.send_sticker(message.chat.id, 'CAADAgADaQADrKqGF8Qij6L82sPwAg')
     else:
+        sem = storage.qmm_getsem(message.chat.id)
         reply = key.minka_key()
-        que = qmminka.get_question()
+        que = qm_minka.get_question(sem)
         bot.send_message(message.chat.id, que, reply_markup = reply)
-        bot.register_next_step_handler(message, minka)
+        bot.register_next_step_handler(message, qmminka)
 
 @bot.message_handler(commands=['getstid'])
 def getstid(message):
@@ -464,8 +495,34 @@ def getstid(message):
 def getsticid(message):
     bot.send_message(message.chat.id, message.sticker.file_id)
 
+@bot.message_handler(commands=['other'])
+def other_comands(message):
+    msg = "*Інші команди*:\n" + c.other_comands
+    bot.send_message(
+        message.chat.id,
+        msg,
+        parse_mode = "Markdown"
+    )
 
+@bot.message_handler(commands=['ttpolyclinic'])
+def ttpolyclinic(message):
+    bot.send_message(message.chat.id, "Розклад роботи поліклініки:")
+    files = os.listdir("polyclinic/")
+    opened_files = []
+    for file in files:
+        opened_files.append(
+            open("polyclinic/"+file, 'rb')
+        )
+    input_media = [InputMediaPhoto(file) for file in opened_files]
+    msg = bot.send_media_group(message.chat.id, input_media)
+    for file in opened_files:
+        file.close()
+    msg_text = "Останнє оновлення розкладу: "+c.last_polyclinic_photos
+    bot.send_message(message.chat.id, msg_text)
 
+@bot.message_handler(commands=['ttsport'])
+def ttsport(message):
+    bot.send_message(message.chat.id, "Поки недоступно.")
 
 if __name__ == '__main__':
      bot.polling(none_stop = True)

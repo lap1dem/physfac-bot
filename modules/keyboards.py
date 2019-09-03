@@ -111,3 +111,11 @@ def minka_key():
     key.row('Ще питання')
     key.row('Хватє')
     return key
+
+def minkasem_key():
+    # Список курсів
+    key = ReplyKeyboardMarkup(resize_keyboard=True,one_time_keyboard=True)
+    key.row('1 семестр')
+    key.row('2 семестр')
+    key.row('Обидва')
+    return key

@@ -3,8 +3,8 @@ import psycopg2 as psql
 import os
 import modules.help_functions as help
 
-DATABASE_URL = os.environ['DATABASE_URL']
-# DATABASE_URL = "postgres://kqkttvkkxyiepn:3ec572c73369eb3fa9c0a2e2726d52621f008ac4b6b6bfbc9fcd5755f3e2825f@ec2-46-137-188-105.eu-west-1.compute.amazonaws.com:5432/d6fov5rlijed05"
+# DATABASE_URL = os.environ['DATABASE_URL']
+DATABASE_URL = "postgres://kqkttvkkxyiepn:3ec572c73369eb3fa9c0a2e2726d52621f008ac4b6b6bfbc9fcd5755f3e2825f@ec2-46-137-188-105.eu-west-1.compute.amazonaws.com:5432/d6fov5rlijed05"
 
 # %%
 def data_conn(to_execute):
@@ -36,6 +36,8 @@ def ctemails(conn, cur):
     cur.execute(query)
     conn.commit()
 
+ctemails()
+
 @data_conn
 def ctlibrary(conn, cur):
     query = """CREATE TABLE IF NOT EXISTS library
@@ -46,6 +48,22 @@ def ctlibrary(conn, cur):
             aus TEXT NOT NULL)"""
     cur.execute(query)
     conn.commit()
+
+ctlibrary()
+
+@data_conn
+def ctusers(conn, cur):
+    query = """CREATE TABLE IF NOT EXISTS users
+            (id INT NOT NULL,
+            username TEXT NOT NULL,
+            name TEXT NOT NULL,
+            year TEXT,
+            stgroup TEXT,
+            isadmin BOOLEAN)"""
+    cur.execute(query)
+    conn.commit()
+
+ctusers()
 
 @data_conn
 def get_list(conn, cur, table):
@@ -148,6 +166,30 @@ def get_book(conn, cur, name):
     except IndexError:
         return None
 
+# --------USERS---------------
+@data_conn
+def check_reg(conn, cur, id, username, name):
+    cur.execute("SELECT username FROM users WHERE id = %s", (id,))
+    ids = cur.fetchall()
+    if len(ids) == 0:
+        user_reg(id, username, name)
+    else:
+        pass
 
+@data_conn
+def user_reg(conn, cur, id, username, name):
+    cur.execute("INSERT INTO users (id, username, name, year, stgroup, isadmin) VALUES (%s,%s,%s,NULL,NULL,FALSE)",(id, username, name,))
+    conn.commit()
+
+@data_conn
+def registrated_users(conn, cur):
+    cur.execute("SELECT name FROM users")
+    names = cur.fetchall()
+    return names
+
+@data_conn
+def delete_users_table(conn, cur):
+    cur.execute("DROP TABLE users")
+    conn.commit()
 # %%
-get_lib_aus('3 курс', 'Ядерна фізика')
+# delete_users_table()
