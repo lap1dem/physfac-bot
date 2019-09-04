@@ -493,7 +493,7 @@ def other_comands(message):
         parse_mode = "Markdown"
     )
 
-@bot.message_handler(commands=['ttpolyclinic'])
+@bot.message_handler(commands=['ttclinic'])
 def ttpolyclinic(message):
     bot.send_message(message.chat.id, "Розклад роботи поліклініки:")
     files = os.listdir("polyclinic/")
