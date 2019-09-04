@@ -42,21 +42,10 @@ def start(message):
         parse_mode = "Markdown"
     )
 
-@bot.message_handler(commands=['regusers'])
-def reg_users(message):
-    names = data.registrated_users()
-    strnames = ""
-    for name in names:
-        strnames += name[0]
-        strnames += '\n'
-    bot.send_message(
-        message.chat.id,
-        strnames
-    )
 
 @bot.message_handler(commands=['about'])
 def about(message):
-    msg = "*Фізфак Бот v0.6.6*\n_від 24.06.2019_"+\
+    msg = "*Фізфак Бот v"+c.botversion"*\n_від "+c.lastbotupdate"_"+\
         "\n\nВи можете допомогти проекту ідеями або поповнивши базу даних"+\
         " літератури, імейлів і т.п. \n\nЗ проблемами та "+\
         "пропозиціями звертайтесь в телеграм [@vadym_bidula] або "+\
@@ -523,6 +512,18 @@ def ttpolyclinic(message):
 @bot.message_handler(commands=['ttsport'])
 def ttsport(message):
     bot.send_message(message.chat.id, "Поки недоступно.")
+
+@bot.message_handler(commands=['regusers'])
+def reg_users(message):
+    names = data.registrated_users()
+    strnames = ""
+    for name in names:
+        strnames += name[0]
+        strnames += '\n'
+    bot.send_message(
+        message.chat.id,
+        strnames
+    )
 
 if __name__ == '__main__':
      bot.polling(none_stop = True)
