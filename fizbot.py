@@ -45,7 +45,7 @@ def start(message):
 
 @bot.message_handler(commands=['about'])
 def about(message):
-    msg = "*Фізфак Бот v"+c.botversion"*\n_від "+c.lastbotupdate"_"+\
+    msg = "*Фізфак Бот v"+c.botversion+"*\n_від "+c.lastbotupdate+"_"+\
         "\n\nВи можете допомогти проекту ідеями або поповнивши базу даних"+\
         " літератури, імейлів і т.п. \n\nЗ проблемами та "+\
         "пропозиціями звертайтесь в телеграм [@vadym_bidula] або "+\
