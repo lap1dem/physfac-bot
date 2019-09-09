@@ -238,6 +238,8 @@ def lib_year(message):
         bot.register_next_step_handler(msg, lib_lesson)
 
 def lib_lesson(message):
+    print(message.text)
+    print([k[0] for k in data.get_lib_lessons(storage.libGetYear(message.chat.id))])
     if message.text == "Назад":
         markup_years = key.lib_years(message.chat.id)
         markup_years.row('Вихід')
@@ -258,7 +260,7 @@ def lib_lesson(message):
             message.chat.id,
             "Оберіть варіант зі списку, будь ласка."
             )
-        bot.register_next_step_handler(msg, lib_year)
+        bot.register_next_step_handler(msg, lib_lesson)
     else:
         storage.libSetLesson(message.chat.id, message.text)
         markup_aus = key.lib_aus(storage.libGetYear(message.chat.id), message.text, message.chat.id)
