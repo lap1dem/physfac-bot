@@ -511,7 +511,21 @@ def ttpolyclinic(message):
 
 @bot.message_handler(commands=['ttsport'])
 def ttsport(message):
-    bot.send_message(message.chat.id, "Поки недоступно.")
+    markup = key.sport_sch_key()
+    bot.send_message(message.chat.id,
+                    "Розклад роботи секцій спорткомплексу. Будь ласка, оберіть секцію.",
+                    reply_markup=markup)
+    bot.register_next_step_handler(message, send_sport_shchedule)
+
+def send_sport_shchedule(message):
+    key_rem = telebot.types.ReplyKeyboardRemove()
+    schedule = open('sport/'+message.text+'.jpg', 'rb')
+    msg = bot.send_photo(
+        message.chat.id,
+        schedule,
+        reply_markup = key_rem
+        )
+
 
 @bot.message_handler(commands=['regusers'])
 def reg_users(message):

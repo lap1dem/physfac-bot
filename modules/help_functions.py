@@ -2,17 +2,17 @@ import constants as c
 
 def translate_day(ukr_day):
     if ukr_day == c.week_days[0]:
-        return 'monday.jpg'
+        return 'monday.png'
     elif ukr_day == c.week_days[1]:
-        return 'tuesday.jpg'
+        return 'tuesday.png'
     elif ukr_day == c.week_days[2]:
-        return 'wednesday.jpg'
+        return 'wednesday.png'
     elif ukr_day == c.week_days[3]:
-        return 'thursday.jpg'
+        return 'thursday.png'
     elif ukr_day == c.week_days[4]:
-        return 'friday.jpg'
+        return 'friday.png'
     elif ukr_day == c.week_days[5]:
-        return ['monday.jpg','tuesday.jpg','wednesday.jpg','thursday.jpg','friday.jpg']
+        return ['monday.png','tuesday.png','wednesday.png','thursday.png','friday.png']
 
 def get_sch_folder(msg):
     if msg == '1 курс':

@@ -119,3 +119,10 @@ def minkasem_key():
     key.row('2 семестр')
     key.row('Обидва')
     return key
+
+def sport_sch_key():
+    files = [file[:-4] for file in os.listdir("sport/")]
+    key = ReplyKeyboardMarkup(resize_keyboard=True,one_time_keyboard=True)
+    for file in files:
+        key.row(file)
+    return key
