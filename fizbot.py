@@ -545,5 +545,23 @@ def reg_users(message):
         strnames
     )
 
+@bot.message_handler(commands=['setnumerator'])
+def setnumerator(message):
+    data.set_numerator()
+    bot.send_message(message.chat.id, "Зроблено! Тепер - чисельник.")
+
+@bot.message_handler(commands=['setdenominator'])
+def setdenominator(message):
+    data.set_denominator()
+    bot.send_message(message.chat.id, "Зроблено! Тепер - знаменник.")
+
+@bot.message_handler(commands=['nord'])
+def nord(message):
+    is_num = data.get_nord()
+    if is_num:
+        bot.send_message(message.chat.id, "Цього тижня - чисельник.")
+    else:
+        bot.send_message(message.chat.id, "Цього тижня - знаменник.")
+
 if __name__ == '__main__':
      bot.polling(none_stop = True)

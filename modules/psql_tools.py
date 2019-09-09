@@ -2,6 +2,7 @@
 import psycopg2 as psql
 import os
 import modules.help_functions as help
+from datetime import date
 
 # DATABASE_URL = os.environ['DATABASE_URL']
 DATABASE_URL = "postgres://kqkttvkkxyiepn:3ec572c73369eb3fa9c0a2e2726d52621f008ac4b6b6bfbc9fcd5755f3e2825f@ec2-46-137-188-105.eu-west-1.compute.amazonaws.com:5432/d6fov5rlijed05"
@@ -64,6 +65,18 @@ def ctusers(conn, cur):
     conn.commit()
 
 ctusers()
+
+@data_conn
+def ctnord(conn, cur):
+    query = """CREATE TABLE IF NOT EXISTS nord
+            (day INT,
+            month INT,
+            year INT,
+            isnumerator BOOLEAN)"""
+    cur.execute(query)
+    conn.commit()
+
+ctnord()
 
 @data_conn
 def get_list(conn, cur, table):
@@ -199,3 +212,33 @@ def delete_library_table(conn, cur):
 # %%
 # delete_users_table()
 # delete_library_table()
+
+#----------NORD----------
+@data_conn
+def set_numerator(conn, cur):
+    cur.execute("DELETE FROM nord")
+    today = date.today()
+    cur.execute("INSERT INTO nord (day, month, year, isnumerator) VALUES (%s, %s, %s, TRUE)",
+                    (today.day, today.month, today.year))
+    conn.commit()
+
+@data_conn
+def set_denominator(conn, cur):
+    cur.execute("DELETE FROM nord")
+    today = date.today()
+    cur.execute("INSERT INTO nord (day, month, year, isnumerator) VALUES (%s, %s, %s, FALSE)",
+                    (today.day, today.month, today.year))
+    conn.commit()
+
+@data_conn
+def get_nord(conn, cur):
+    # returns boolean "is_numerator"
+    cur.execute("SELECT * FROM nord")
+    row = cur.fetchall()[0]
+    set_date = date(row[2],row[1],row[0])
+    today = date.today()
+    delta = today-set_date
+    nweeks = int((delta.days + set_date.weekday())%7)
+    if (nweeks+2)%2 == 0:
+        return(row[3])
+    return(not row[3])
