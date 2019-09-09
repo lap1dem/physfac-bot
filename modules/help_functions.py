@@ -1,4 +1,5 @@
 import constants as c
+import os
 
 def translate_day(ukr_day):
     if ukr_day == c.week_days[0]:
