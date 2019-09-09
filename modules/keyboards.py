@@ -121,7 +121,7 @@ def minkasem_key():
     return key
 
 def sport_sch_key():
-    files = [file[:-4] for file in os.listdir("sport/")].sort()
+    files = [file[:-4] for file in os.listdir("sport/")]
     key = ReplyKeyboardMarkup(resize_keyboard=True,one_time_keyboard=True)
     for file in files:
         key.row(file)
