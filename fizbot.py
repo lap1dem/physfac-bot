@@ -29,6 +29,7 @@ def start(message):
         fullname += message.from_user.last_name
     except TypeError:
         pass
+    print(fullname + ' joined!')
     data.check_reg(message.chat.id,
                    message.from_user.username,
                    fullname)
@@ -238,8 +239,6 @@ def lib_year(message):
         bot.register_next_step_handler(msg, lib_lesson)
 
 def lib_lesson(message):
-    print(message.text)
-    print([k[0] for k in data.get_lib_lessons(storage.libGetYear(message.chat.id))])
     if message.text == "Назад":
         markup_years = key.lib_years(message.chat.id)
         markup_years.row('Вихід')
