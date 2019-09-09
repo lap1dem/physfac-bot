@@ -461,7 +461,7 @@ def get_database(message):
 @bot.message_handler(commands=['qmminka'])
 def qmminka_start(message):
     reply = key.minkasem_key()
-    bot.send_message(message.chat.id, 'Оберіть семестр.', reply_markup = reply)
+    bot.send_message(message.chat.id, 'Мінка з КМ. Оберіть семестр.', reply_markup = reply)
     bot.register_next_step_handler(message, qmminka)
 def qmminka(message):
     if message.text != 'Хватє' and message.text != 'Ще питання':
