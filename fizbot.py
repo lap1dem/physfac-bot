@@ -518,14 +518,18 @@ def ttsport(message):
     bot.register_next_step_handler(message, send_sport_shchedule)
 
 def send_sport_shchedule(message):
-    key_rem = telebot.types.ReplyKeyboardRemove()
-    schedule = open('sport/'+message.text+'.jpg', 'rb')
-    msg = bot.send_photo(
-        message.chat.id,
-        schedule,
-        reply_markup = key_rem
-        )
-
+    if message.text in help.get_sport_files():
+        key_rem = telebot.types.ReplyKeyboardRemove()
+        schedule = open('sport/'+message.text+'.jpg', 'rb')
+        bot.send_photo(
+            message.chat.id,
+            schedule,
+            reply_markup = key_rem
+            )
+        bot.send_message(message.chat.id, "Останнє оновлення розкладу: "+c.last_sport_photos)
+    else:
+        bot.send_message(message.chat.id, "Будь ласка, оберіть варіант зі списку.")
+        bot.register_next_step_handler(message, send_sport_shchedule)
 
 @bot.message_handler(commands=['regusers'])
 def reg_users(message):

@@ -32,3 +32,6 @@ def get_sch_folder(msg):
 
 def capitalize_n(s,n):
     return s[:n]+ s[n].capitalize() + s[n+1:]
+
+def get_sport_files():
+    return [file[:-4] for file in os.listdir("sport/")]
