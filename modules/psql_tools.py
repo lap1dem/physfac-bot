@@ -238,7 +238,7 @@ def get_nord(conn, cur):
     set_date = date(row[2],row[1],row[0])
     today = date.today()
     delta = today-set_date
-    nweeks = int((delta.days + set_date.weekday())%7)
+    nweeks = int((delta.days + set_date.weekday())/7)
     if (nweeks+2)%2 == 0:
         return(row[3])
     return(not row[3])
