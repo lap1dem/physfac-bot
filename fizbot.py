@@ -30,8 +30,11 @@ def start(message):
     except TypeError:
         pass
     print(fullname +' joined!')
+    username = message.from_user.username
+    if username == None:
+        username = '-'
     data.check_reg(message.chat.id,
-                   message.from_user.username,
+                   username,
                    fullname)
 
     msg = """Вітаю!\nЯ - бот, написаний для студентів фізичного факультету КНУ.
