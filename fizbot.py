@@ -29,7 +29,7 @@ def start(message):
         fullname += message.from_user.last_name
     except TypeError:
         pass
-    print(fullname +' '+ message.from_user.username +' joined!')
+    print(fullname +' joined!')
     data.check_reg(message.chat.id,
                    message.from_user.username,
                    fullname)
