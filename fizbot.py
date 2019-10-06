@@ -396,7 +396,6 @@ def add_mail(message):
 def write_mail(message):
     email = message.text
     name, dep = storage.get_edata(message.chat.id)
-    data = database.SQL(database_name)
     data.add_email(name, dep, email)
     storage.del_edata(message.chat.id)
 
