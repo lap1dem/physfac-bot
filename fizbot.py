@@ -371,7 +371,6 @@ def del_mail(message):
     storage.upd_ename(message.chat.id, message.text)
     name, dep = storage.get_edata(message.chat.id)
     storage.del_edata(message.chat.id)
-    data = database.SQL(database_name)
     data.email_remove(name, dep)
     bot.send_message(message.chat.id,"Видалено!")
 
