@@ -23,12 +23,7 @@ def test(message):
 
 @bot.message_handler(commands=['start'])
 def start(message):
-    fullname = message.from_user.first_name
-    try:
-        fullname += ' '
-        fullname += message.from_user.last_name
-    except TypeError:
-        pass
+    fullname = help.get_fullname(message)
     print(fullname +' joined!')
     username = message.from_user.username
     if username == None:
@@ -49,6 +44,8 @@ def start(message):
 
 @bot.message_handler(commands=['about'])
 def about(message):
+    fullname = help.get_fullname(message)
+    print('"about" command has been used by ' + fullname)
     msg = "*Фізфак Бот v"+c.botversion+"*\n_від "+c.lastbotupdate+"_"+\
         "\n\nВи можете допомогти проекту ідеями або поповнивши базу даних"+\
         " літератури, імейлів і т.п. \n\nЗ проблемами та "+\
@@ -63,6 +60,8 @@ def about(message):
 
 @bot.message_handler(commands=['emails'])
 def whats_dep(message):
+    fullname = help.get_fullname(message)
+    print('"emails" command has been used by ' + fullname)
     storage.delete_all(message.chat.id)
     markup_dep = key.email_dep()
     markup_dep.row("Вихід")
@@ -114,6 +113,8 @@ def get_mail(message):
 
 @bot.message_handler(commands=['schedule'])
 def whats_year(message):
+    fullname = help.get_fullname(message)
+    print('"schedule" command has been used by ' + fullname)
     storage.delete_all(message.chat.id)
     storage.del_schedule_path(message.chat.id)
     storage.update_schedule_path(message.chat.id,'schedule')
@@ -197,6 +198,8 @@ def send_schedule(message):
 
 @bot.message_handler(commands=['library'])
 def lib_start(message):
+    fullname = help.get_fullname(message)
+    print('"library" command has been used by ' + fullname)
     storage.delete_all(message.chat.id)
     bot.send_message(message.chat.id,
         "Бібліотека працює в тестовому режимі.")
@@ -497,6 +500,8 @@ def other_comands(message):
 
 @bot.message_handler(commands=['ttclinic'])
 def ttpolyclinic(message):
+    fullname = help.get_fullname(message)
+    print('"ttclinic" command has been used by ' + fullname)
     bot.send_message(message.chat.id, "Розклад роботи поліклініки:")
     files = os.listdir("polyclinic/")
     opened_files = []
@@ -513,6 +518,8 @@ def ttpolyclinic(message):
 
 @bot.message_handler(commands=['ttsport'])
 def ttsport(message):
+    fullname = help.get_fullname(message)
+    print('"ttsport" command has been used by ' + fullname)
     markup = key.sport_sch_key()
     bot.send_message(message.chat.id,
                     "Розклад роботи секцій спорткомплексу. Будь ласка, оберіть секцію.",

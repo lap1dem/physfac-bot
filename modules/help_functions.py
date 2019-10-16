@@ -36,3 +36,12 @@ def capitalize_n(s,n):
 
 def get_sport_files():
     return [file[:-4] for file in os.listdir("sport/")]
+
+def get_fullname(message):
+    fullname = message.from_user.first_name
+    try:
+        fullname += ' '
+        fullname += message.from_user.last_name
+    except TypeError:
+        pass
+    return(fullname)
