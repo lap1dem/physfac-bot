@@ -574,5 +574,12 @@ def nord(message):
     else:
         bot.send_message(message.chat.id, "Цього тижня - знаменник.")
 
+def log_to_dialog(message):
+    pass
+
+@bot.message_handler(commands=['chat_id'])
+def het_chat_id(message):
+    bot.send_message(message.chat.id, str(message.chat.id))
+
 if __name__ == '__main__':
      bot.polling(none_stop = True)
