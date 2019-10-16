@@ -465,6 +465,8 @@ def get_database(message):
 
 @bot.message_handler(commands=['qmminka'])
 def qmminka_start(message):
+    fullname = help.get_fullname(message)
+    print('"qmminka" command has been used by ' + fullname)
     reply = key.minkasem_key()
     bot.send_message(message.chat.id, 'Мінка з КМ. Оберіть семестр.', reply_markup = reply)
     bot.register_next_step_handler(message, qmminka)
@@ -564,6 +566,8 @@ def setdenominator(message):
 
 @bot.message_handler(commands=['nord'])
 def nord(message):
+    fullname = help.get_fullname(message)
+    print('"nord" command has been used by ' + fullname)
     is_num = data.get_nord()
     if is_num:
         bot.send_message(message.chat.id, "Цього тижня - чисельник.")
