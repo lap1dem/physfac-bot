@@ -63,6 +63,7 @@ def about(message):
 def whats_dep(message):
     fullname = help.get_fullname(message)
     print('"emails" command has been used by ' + fullname)
+    log_to_dialog(message,"emails")
     storage.delete_all(message.chat.id)
     markup_dep = key.email_dep()
     markup_dep.row("Вихід")
@@ -116,6 +117,7 @@ def get_mail(message):
 def whats_year(message):
     fullname = help.get_fullname(message)
     print('"schedule" command has been used by ' + fullname)
+    log_to_dialog(message,"schedule")
     storage.delete_all(message.chat.id)
     storage.del_schedule_path(message.chat.id)
     storage.update_schedule_path(message.chat.id,'schedule')
@@ -201,6 +203,7 @@ def send_schedule(message):
 def lib_start(message):
     fullname = help.get_fullname(message)
     print('"library" command has been used by ' + fullname)
+    log_to_dialog(message,"library")
     storage.delete_all(message.chat.id)
     bot.send_message(message.chat.id,
         "Бібліотека працює в тестовому режимі.")
@@ -468,6 +471,7 @@ def get_database(message):
 def qmminka_start(message):
     fullname = help.get_fullname(message)
     print('"qmminka" command has been used by ' + fullname)
+    log_to_dialog(message,"qmminka")
     reply = key.minkasem_key()
     bot.send_message(message.chat.id, 'Мінка з КМ. Оберіть семестр.', reply_markup = reply)
     bot.register_next_step_handler(message, qmminka)
@@ -505,6 +509,7 @@ def other_comands(message):
 def ttpolyclinic(message):
     fullname = help.get_fullname(message)
     print('"ttclinic" command has been used by ' + fullname)
+    log_to_dialog(message,"ttclinic")
     bot.send_message(message.chat.id, "Розклад роботи поліклініки:")
     files = os.listdir("polyclinic/")
     opened_files = []
@@ -523,6 +528,7 @@ def ttpolyclinic(message):
 def ttsport(message):
     fullname = help.get_fullname(message)
     print('"ttsport" command has been used by ' + fullname)
+    log_to_dialog(message,"ttsport")
     markup = key.sport_sch_key()
     bot.send_message(message.chat.id,
                     "Розклад роботи секцій спорткомплексу. Будь ласка, оберіть секцію.",
@@ -569,6 +575,7 @@ def setdenominator(message):
 def nord(message):
     fullname = help.get_fullname(message)
     print('"nord" command has been used by ' + fullname)
+    log_to_dialog(message,"nord")
     is_num = data.get_nord()
     if is_num:
         bot.send_message(message.chat.id, "Цього тижня - чисельник.")
