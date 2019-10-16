@@ -30,3 +30,5 @@ departments = ["Загальної фізики", "КТП", "Функ. мате�
 last_polyclinic_photos = '03.09.2019p.'
 
 last_sport_photos = '09.09.2019p.'
+
+log_to_dialog = True
