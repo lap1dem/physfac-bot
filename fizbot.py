@@ -64,7 +64,8 @@ def whats_dep(message):
     print('"emails" command has been used by ' + fullname)
     storage.delete_all(message.chat.id)
     markup_dep = key.email_dep()
-    markup_dep.row("Вихід")
+    emoji = u"U+1F6AA"
+    markup_dep.row(emoji+"Вихід")
     msg = bot.send_message(message.chat.id,"База імейлів викладачів.\nВиберіть кафедру або введіть прізвище.", reply_markup = markup_dep)
     bot.register_next_step_handler(msg, whats_name)
 
