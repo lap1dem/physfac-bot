@@ -584,8 +584,9 @@ def nord(message):
 
 def log_to_dialog(message, function):
     if c.log_to_dialog:
-        fullname = help.get_fullname(message)
-        bot.send_message(394701484, function+"\n"+fullname)
+        if message.chat.id != 394701484:
+            fullname = help.get_fullname(message)
+            bot.send_message(394701484, function+"\n"+fullname)
 
 @bot.message_handler(commands=['chat_id'])
 def het_chat_id(message):
