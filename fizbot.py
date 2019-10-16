@@ -46,6 +46,7 @@ def start(message):
 def about(message):
     fullname = help.get_fullname(message)
     print('"about" command has been used by ' + fullname)
+    log_to_dialog(message,"about")
     msg = "*Фізфак Бот v"+c.botversion+"*\n_від "+c.lastbotupdate+"_"+\
         "\n\nВи можете допомогти проекту ідеями або поповнивши базу даних"+\
         " літератури, імейлів і т.п. \n\nЗ проблемами та "+\
@@ -574,8 +575,9 @@ def nord(message):
     else:
         bot.send_message(message.chat.id, "Цього тижня - знаменник.")
 
-def log_to_dialog(message):
-    pass
+def log_to_dialog(message, function):
+    fullname = help.get_fullname(message)
+    bot.send_message(394701484, function+"\n"+fullname)
 
 @bot.message_handler(commands=['chat_id'])
 def het_chat_id(message):
