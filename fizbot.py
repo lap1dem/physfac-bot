@@ -205,8 +205,6 @@ def lib_start(message):
     print('"library" command has been used by ' + fullname)
     log_to_dialog(message,"library")
     storage.delete_all(message.chat.id)
-    bot.send_message(message.chat.id,
-        "Бібліотека працює в тестовому режимі.")
     markup_years = key.lib_years(message.chat.id)
     markup_years.row('Вихід')
     msg = bot.send_message(
