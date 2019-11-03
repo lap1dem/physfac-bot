@@ -179,6 +179,12 @@ def get_book(conn, cur, name):
     except IndexError:
         return None
 
+@data_conn
+def del_book(conn, cur, name):
+    link = get_book(name)
+    cur.execute("DELETE FROM library WHERE link = %s", (link,))
+    conn.commit()
+
 # --------USERS---------------
 @data_conn
 def check_reg(conn, cur, id, username, name):

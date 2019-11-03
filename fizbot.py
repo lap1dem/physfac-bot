@@ -665,7 +665,7 @@ def rb_start(message):
         "Будь ласка, оберіть розділ/файл.",
         reply_markup=markup_years
     )
-    bot.register_next_step_handler(msg, lib_year)
+    bot.register_next_step_handler(msg, rb_year)
 
 
 def rb_year(message):
@@ -725,7 +725,7 @@ def rb_lesson(message):
         bot.register_next_step_handler(msg, rb_aus)
 
 
-def lib_aus(message):
+def rb_aus(message):
     if message.text == "Назад":
         markup_lessons = key.lib_lessons(
             storage.libGetYear(message.chat.id), message.chat.id)
@@ -741,7 +741,7 @@ def lib_aus(message):
             message.chat.id,
             "Оберіть варіант зі списку, будь ласка."
         )
-        bot.register_next_step_handler(msg, lib_aus)
+        bot.register_next_step_handler(msg, rb_aus)
     else:
         if message.text in [k[0] for k in data.get_lib_aus(storage.libGetYear(message.chat.id), storage.libGetLesson(message.chat.id))[1]]:
             key_rem = telebot.types.ReplyKeyboardRemove()
