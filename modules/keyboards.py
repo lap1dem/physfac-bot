@@ -106,7 +106,6 @@ def lib_files(year, lesson, aus, chat_id):
         return None
 
 def minka_key():
-    # Список курсів
     key = ReplyKeyboardMarkup(resize_keyboard=True,one_time_keyboard=True)
     key.row('Ще питання')
     key.row('Хватє')

@@ -5,7 +5,7 @@ import telebot
 import os
 import modules.keyboards as key
 import modules.storage as storage
-import qm_minka
+import minka
 import modules.help_functions as help
 import constants as c
 import modules.psql_tools as data
@@ -532,7 +532,7 @@ def qmminka(message):
     else:
         sem = storage.qmm_getsem(message.chat.id)
         reply = key.minka_key()
-        que = qm_minka.get_question(sem)
+        que = minka.get_qm_question(sem)
         bot.send_message(message.chat.id, que, reply_markup=reply)
         bot.register_next_step_handler(message, qmminka)
 
@@ -653,6 +653,29 @@ def log_to_dialog(message, function):
 @bot.message_handler(commands=['chat_id'])
 def het_chat_id(message):
     bot.send_message(message.chat.id, str(message.chat.id))
+
+@bor.message_handler(commands=['plasminka'])
+def plasminka_start(message):
+    fullname = help.get_fullname(message)
+    print('"plasminka" command has been used by ' + fullname)
+    log_to_dialog(message, "plasminka")
+    bot.send_message(
+        message.chat.id, 'Мінка по формулах з предмету "Фізика плазми."')
+    bot.register_next_step_handler(message, plasminka)
+
+def plasminka(message):
+    if message.text == 'Хватє':
+        key_rem = telebot.types.ReplyKeyboardRemove()
+        bot.send_message(
+            message.chat.id, 'Окей, удачі на мінці!', reply_markup=key_rem)
+    else:
+        reply = key.minka_key()
+        que = minka.get_plasma_question()
+        bot.send_message(message.chat.id, que, reply_markup=reply)
+        bot.register_next_step_handler(message, plasminka)
+
+
+
 
 # ===================================================================
 @bot.message_handler(commands=['remove_book'])
