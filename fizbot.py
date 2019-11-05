@@ -654,7 +654,7 @@ def log_to_dialog(message, function):
 def het_chat_id(message):
     bot.send_message(message.chat.id, str(message.chat.id))
 
-@bor.message_handler(commands=['plasminka'])
+@bot.message_handler(commands=['plasminka'])
 def plasminka_start(message):
     fullname = help.get_fullname(message)
     print('"plasminka" command has been used by ' + fullname)
