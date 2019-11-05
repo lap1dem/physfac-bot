@@ -661,7 +661,7 @@ def plasminka_start(message):
     log_to_dialog(message, "plasminka")
     bot.send_message(
         message.chat.id, 'Мінка по формулах з предмету "Фізика плазми."')
-    bot.register_next_step_handler(message, plasminka)
+    plasminka(message)
 
 def plasminka(message):
     if message.text == 'Хватє':
