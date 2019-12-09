@@ -4,13 +4,16 @@
 
 import os
 import random
+import pandas as pd
 
 import numpy as np
 from openpyxl import load_workbook
-ex = os.path.abspath("Мінка кванти.xlsx")
+mnkDir = 'minka_files/'
+ex = os.path.abspath(mnkDir + "Мінка кванти.xlsx")
 wb = load_workbook(ex)
 cons = wb[wb.sheetnames[0]]
 
+eldynQ = pd.read_csv(mnkDir+'electrodyn.txt', header=None, sep='&')
 plasmQ = [
 "Середня локальна швидкість",
 "Довжина Дебая",
@@ -46,4 +49,9 @@ def get_qm_question(nsem):
 
 def get_plasma_question():
     question = random.choice(plasmQ)
+    return(question)
+
+def get_eldyn_question():
+    ind = random.choice(range(len(eldynQ[0])))
+    question = "*" + eldynQ[0][ind] + "*\n\n" + eldynQ[1][ind]
     return(question)

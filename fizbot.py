@@ -504,10 +504,10 @@ def save_to_lib(message):
                      reply_markup=key_rem)
 
 
-@bot.message_handler(commands=['get_database'])
-def get_database(message):
-    file = open("data.db", 'rb')
-    bot.send_document(message.chat.id, file)
+# @bot.message_handler(commands=['get_database'])
+# def get_database(message):
+#     file = open("data.db", 'rb')
+#     bot.send_document(message.chat.id, file)
 
 
 @bot.message_handler(commands=['qmminka'])
@@ -815,6 +815,61 @@ def rb_finally(message):
         )
         storage.delete_all(message.chat.id)
 
+@bot.message_handler(commands=['edminka'])
+def edminka_start(message):
+    fullname = help.get_fullname(message)
+    print('"edminka" command has been used by ' + fullname)
+    log_to_dialog(message, "edminka")
+    msg = bot.send_message(
+        message.chat.id,
+        "Мінка до екзамену з електродинаміки.\n\nСписок питань підготувала @cassini22."
+    )
+    edminka(msg)
+
+def edminka(message):
+    if message.text == 'Хватє':
+        key_rem = telebot.types.ReplyKeyboardRemove()
+        bot.send_message(
+            message.chat.id, 'Окей, удачі на мінці!', reply_markup=key_rem)
+        bot.send_sticker(message.chat.id, 'CAADAgADhwADrKqGF2eV6us-DDCBFgQ')
+    else:
+        reply = key.minka_key()
+        que = minka.get_eldyn_question()
+        bot.send_message(message.chat.id, que, reply_markup=reply, parse_mode="Markdown")
+        bot.register_next_step_handler(message, edminka)
+
+@bot.message_handler(commands=['exams'])
+def exams_start(message):
+    fullname = help.get_fullname(message)
+    print('"exams" command has been used by ' + fullname)
+    log_to_dialog(message, "exams")
+    rep_key = key.stud_years()
+    bot.send_message(
+        message.chat.id,
+        'Розклад екзаменаційної сесії.\nБудь ласка, оберіть курс.',
+        reply_markup=rep_key
+    )
+    bot.register_next_step_handler(message, exams)
+
+def exams(message):
+    if message.text not in c.stud_years:
+        rep_key = key.stud_years()
+        bot.send_message(
+            message.chat.id,
+            'Будь ласка, оберіть варіант зі списку.',
+            reply_markup=rep_key
+        )
+        bot.register_next_step_handler(message, exams)
+    else:
+        with open('session_sch/' + message.text + '.pdf', 'rb') as file:
+            bot.send_document(message.chat.id, file)
+        key_rem = telebot.types.ReplyKeyboardRemove()
+        bot.send_message(
+            message.chat.id,
+            '*Увага!*\nДаний розклад був актуальним на 09.12.2019р.\nРозклад може мінятися. Слідкуйте за дошкою оголошень навпроти деканату.',
+            reply_markup=key_rem,
+            parse_mode="Markdown"
+            )
 
 
 if __name__ == '__main__':

@@ -3,3 +3,4 @@ numpy
 openpyxl
 psycopg2
 datetime
+pandas
