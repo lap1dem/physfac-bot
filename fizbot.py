@@ -12,22 +12,10 @@ import modules.psql_tools as data
 import json
 from telebot.types import InputMediaPhoto
 
-from modules.civ import *
 
 bot = telebot.TeleBot(token)
 
 print("Bot started")
-
-
-@bot.message_handler(commands=['civ'])
-def civ(message):
-    civ_random()
-    civ_img = open("civ.png", 'rb')
-    msg = bot.send_photo(
-        message.chat.id,
-        civ_img,
-        # reply_markup=key_rem
-    )
 
 
 @bot.message_handler(commands=['start'])
