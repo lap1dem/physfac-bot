@@ -4,5 +4,3 @@ openpyxl
 psycopg2
 datetime
 pandas
-pyscreenshot
-python3-tk
