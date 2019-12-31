@@ -4,8 +4,9 @@ import os
 import modules.help_functions as help
 from datetime import date
 
-# DATABASE_URL = os.environ['DATABASE_URL']
-DATABASE_URL = "postgres://kqkttvkkxyiepn:3ec572c73369eb3fa9c0a2e2726d52621f008ac4b6b6bfbc9fcd5755f3e2825f@ec2-46-137-188-105.eu-west-1.compute.amazonaws.com:5432/d6fov5rlijed05"
+DATABASE_URL = os.environ['DATABASE_URL']
+# DATABASE_URL = "postgres://kqkttvkkxyiepn:3ec572c73369eb3fa9c0a2e2726d52621f008ac4b6b6bfbc9fcd5755f3e2825f@ec2-46-137-188-105.eu-west-1.compute.amazonaws.com:5432/d6fov5rlijed05"
+
 
 # %%
 def data_conn(to_execute):
@@ -83,6 +84,8 @@ def get_list(conn, cur, table):
     cur.execute("SELECT * FROM {}".format(table))
     rows = cur.fetchall()
     return rows
+
+
 # -----EMAILS--------------------
 @data_conn
 def get_email(conn, cur, name, dep):
@@ -92,6 +95,21 @@ def get_email(conn, cur, name, dep):
         return email[0][0]
     except IndexError:
         return None
+
+@data_conn
+def get_all_emails(conn, cur):
+    cur.execute("SELECT * FROM emails")
+    all = cur.fetchall()
+    messages = []
+
+    for i in range(len(all)):
+        messages.append(
+            "Викладач: " + all[i][0] + "\n" +
+            "Пошта: " + all[i][2] + "\n" +
+            "Кафедра: " + all[i][1]
+        )
+
+    return(messages)
 
 @data_conn
 def add_email(conn, cur, name, dep, email):

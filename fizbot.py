@@ -866,6 +866,16 @@ def exams(message):
             parse_mode="Markdown"
             )
 
+@bot.message_handler(commands=['allemails'])
+def allemails(message):
+    messages = data.get_all_emails()
+
+    for m in messages:
+        bot.send_message(
+            message.chat.id,
+            m
+        )
+
 
 if __name__ == '__main__':
     bot.polling(none_stop=True)
