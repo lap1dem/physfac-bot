@@ -1,1 +1,1 @@
-bot: python3 fizbot.py
+bot: python3 main.py
