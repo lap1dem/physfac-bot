@@ -9,9 +9,6 @@ import modules.data_access as data
 
 @bot.message_handler(commands=['emails'])
 def whats_dep(message):
-    fullname = help.get_fullname(message)
-    print('"emails" command has been used by ' + fullname)
-    help.log_to_dialog(message, "emails")
     nav.delete_all(message.chat.id)
     markup_dep = key.email_dep()
     markup_dep.row("Вихід")

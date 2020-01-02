@@ -8,9 +8,6 @@ import modules.help_functions as help
 
 @bot.message_handler(commands=['schedule'])
 def whats_year(message):
-    fullname = help.get_fullname(message)
-    print('"schedule" command has been used by ' + fullname)
-    help.log_to_dialog(message, sch_path)
     nav.delete_all(message.chat.id)
     nav.del_schedule_path(message.chat.id)
     nav.update_schedule_path(message.chat.id, sch_path)
