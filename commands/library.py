@@ -1,7 +1,7 @@
 from implib import *
 
 import modules.keyboards as key
-import modules.navigation as nav
+import modules.navigation as navw
 import modules.help_functions as help
 import modules.data_access as data
 
@@ -28,7 +28,7 @@ def lib_year(message):
         key_rem = telebot.types.ReplyKeyboardRemove()
         bot.send_message(
             message.chat.id,
-            "Список доступних команд:" + c.avaible_comands,
+            "Список доступних команд:" + c.avaiable_comands,
             reply_markup=key_rem,
             parse_mode="Markdown"
         )

@@ -41,7 +41,7 @@ def whats_day(message):
         key_rem = telebot.types.ReplyKeyboardRemove()
         bot.send_message(
             message.chat.id,
-            "Список доступних команд:" + c.avaible_comands,
+            "Список доступних команд:" + c.avaiable_comands,
             reply_markup=key_rem,
             parse_mode="Markdown"
         )

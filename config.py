@@ -1,6 +1,6 @@
 # Defining bot
+from hidden_data import * #imported token and DATABASE_URL
 import telebot
-token = '934435638:AAEDGw89ytOeGOdUFLFaVQL86aotsNKGtW4'
 bot = telebot.TeleBot(token)
 
 # Project paths
