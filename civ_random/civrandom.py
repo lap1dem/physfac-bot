@@ -80,7 +80,7 @@ def civrandom(names, ncivs):
     to_random = [i for i in iconlist if not i in bans]
 
     namelist = [x.strip() for x in names.split(',')]
-    namelist = random.shuffle(namelist)
+    random.shuffle(namelist)
 
     player_headers = [draw_name(name) for name in namelist]
 
