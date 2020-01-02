@@ -1,14 +1,13 @@
-# %%
-import psycopg2 as psql
-import os
+from implib import *
+
 import modules.help_functions as help
-from datetime import date
-
-DATABASE_URL = os.environ['DATABASE_URL']
-# DATABASE_URL = "postgres://kqkttvkkxyiepn:3ec572c73369eb3fa9c0a2e2726d52621f008ac4b6b6bfbc9fcd5755f3e2825f@ec2-46-137-188-105.eu-west-1.compute.amazonaws.com:5432/d6fov5rlijed05"
 
 
-# %%
+# DATABASE_URL = os.environ['DATABASE_URL']
+DATABASE_URL = "postgres://kqkttvkkxyiepn:3ec572c73369eb3fa9c0a2e2726d52621f008ac4b6b6bfbc9fcd5755f3e2825f@ec2-46-137-188-105.eu-west-1.compute.amazonaws.com:5432/d6fov5rlijed05"
+
+
+# Wrapper for conecting to database
 def data_conn(to_execute):
     def wrapper(*args):
         try:
@@ -28,7 +27,7 @@ def data_conn(to_execute):
 
     return wrapper
 
-
+# Creating tables
 @data_conn
 def ctemails(conn, cur):
     query = """CREATE TABLE IF NOT EXISTS emails
@@ -79,6 +78,7 @@ def ctnord(conn, cur):
 
 ctnord()
 
+
 @data_conn
 def get_list(conn, cur, table):
     cur.execute("SELECT * FROM {}".format(table))
@@ -100,16 +100,15 @@ def get_email(conn, cur, name, dep):
 def get_all_emails(conn, cur):
     cur.execute("SELECT * FROM emails")
     all = cur.fetchall()
-    messages = []
 
-    for i in range(len(all)):
-        messages.append(
-            "Викладач: " + all[i][0] + "\n" +
-            "Пошта: " + all[i][2] + "\n" +
-            "Кафедра: " + all[i][1]
-        )
+    with open("allemails.txt", "w+") as file:
+        file.write("Ім'я,Пошта,Кафедра\n")
+        for i in range(len(all)):
+            file.write(
+                all[i][0] + "," + all[i][2] + "," + all[i][1] + "\n"
+            )
 
-    return(messages)
+    return(None)
 
 @data_conn
 def add_email(conn, cur, name, dep, email):
@@ -203,6 +202,12 @@ def del_book(conn, cur, name):
     cur.execute("DELETE FROM library WHERE link = %s", (link,))
     conn.commit()
 
+@data_conn
+def delete_library_table(conn, cur):
+    cur.execute("DROP TABLE library")
+    conn.commit()
+
+
 # --------USERS---------------
 @data_conn
 def check_reg(conn, cur, id, username, name):
@@ -229,13 +234,6 @@ def delete_users_table(conn, cur):
     cur.execute("DROP TABLE users")
     conn.commit()
 
-@data_conn
-def delete_library_table(conn, cur):
-    cur.execute("DROP TABLE library")
-    conn.commit()
-# %%
-# delete_users_table()
-# delete_library_table()
 
 #----------NORD----------
 @data_conn

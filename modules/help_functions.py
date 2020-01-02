@@ -1,5 +1,4 @@
-import constants as c
-import os
+from implib import *
 
 def translate_day(ukr_day):
     if ukr_day == c.week_days[0]:
@@ -35,7 +34,7 @@ def capitalize_n(s,n):
     return s[:n]+ s[n].capitalize() + s[n+1:]
 
 def get_sport_files():
-    return [file[:-4] for file in os.listdir("sport/")]
+    return [file[:-4] for file in os.listdir(sport_sch_path)]
 
 def get_fullname(message):
     fullname = message.from_user.first_name
@@ -45,3 +44,9 @@ def get_fullname(message):
     except TypeError:
         pass
     return(fullname)
+
+def log_to_dialog(message, function):
+    if c.log_to_dialog:
+        if message.chat.id != 394701484:
+            fullname = help.get_fullname(message)
+            bot.send_message(394701484, function + "\n" + fullname)

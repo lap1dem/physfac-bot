@@ -1,11 +1,6 @@
-from telebot.types import (
-    ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton
-)
-from config import *
-import constants
-import modules.psql_tools as data
-import os
-import modules.storage as storage
+from implib import *
+import modules.data_access as data
+import modules.navigation as nav
 
 work_dir = os.getcwd()
 
@@ -33,7 +28,7 @@ def groups_for_year(year):
     return groups
 
 def departments():
-    deps = constants.departments
+    deps = c.departments
     key = ReplyKeyboardMarkup(resize_keyboard = True, one_time_keyboard=True)
     for i in deps:
         key.row(i)
@@ -59,7 +54,7 @@ def lib_years(chat_id):
     list.sort()
     if len(list) != 0:
         key = ReplyKeyboardMarkup(resize_keyboard = True, one_time_keyboard=True)
-        if len(storage.libGetChoosed(chat_id)) != 0:
+        if len(nav.libGetChoosed(chat_id)) != 0:
             key.row('Отримати літературу')
         for i in list:
             key.row(i[0])
@@ -71,7 +66,7 @@ def lib_lessons(year, chat_id):
     list = data.get_lib_lessons(year)
     if len(list) != 0:
         key = ReplyKeyboardMarkup(resize_keyboard = True, one_time_keyboard=True)
-        if len(storage.libGetChoosed(chat_id)) != 0:
+        if len(nav.libGetChoosed(chat_id)) != 0:
             key.row('Отримати літературу')
         for i in list:
             key.row(i[0])
@@ -83,7 +78,7 @@ def lib_aus(year, lesson, chat_id):
     aus, names = data.get_lib_aus(year, lesson)
     if len(aus) != 0 or len(names) != 0:
         key = ReplyKeyboardMarkup(resize_keyboard = True, one_time_keyboard=True)
-        if len(storage.libGetChoosed(chat_id)) != 0:
+        if len(nav.libGetChoosed(chat_id)) != 0:
             key.row('Отримати літературу')
         for i in aus:
             key.row(i[0])
@@ -97,7 +92,7 @@ def lib_files(year, lesson, aus, chat_id):
     names = data.get_lib_names(year, lesson, aus)
     if len(aus) != 0 or len(names) != 0:
         key = ReplyKeyboardMarkup(resize_keyboard = True, one_time_keyboard=True)
-        if len(storage.libGetChoosed(chat_id)) != 0:
+        if len(nav.libGetChoosed(chat_id)) != 0:
             key.row('Отримати літературу')
         for i in names:
             key.row(i[0])
@@ -120,7 +115,7 @@ def minkasem_key():
     return key
 
 def sport_sch_key():
-    files = [file[:-4] for file in os.listdir("sport/")]
+    files = [file[:-4] for file in os.listdir(sport_sch_path)]
     key = ReplyKeyboardMarkup(resize_keyboard=True,one_time_keyboard=True)
     for file in files:
         key.row(file)

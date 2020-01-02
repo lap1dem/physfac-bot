@@ -1,8 +1,4 @@
-import shelve as sh
-from config import *
-import os
-import json
-
+from implib import *
 
 def delete_all(chat_id):
     with sh.open(shelve_name) as storage:
@@ -158,6 +154,7 @@ def libGetChoosed(chat_id):
             return json.loads(storage['lib_ch'+str(chat_id)])
         except KeyError:
             return []
+
 
 # -------------OTHER--------------------------------
 def qmm_setsem(chat_id, sem):

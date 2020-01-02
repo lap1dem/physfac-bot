@@ -1,14 +1,6 @@
-# -*- coding: utf-8 -*-
+from implib import *
 
-# %%
-
-import os
-import random
-import pandas as pd
-
-import numpy as np
-from openpyxl import load_workbook
-mnkDir = 'minka_files/'
+mnkDir = 'local_data/minka_files/'
 ex = os.path.abspath(mnkDir + "Мінка кванти.xlsx")
 wb = load_workbook(ex)
 cons = wb[wb.sheetnames[0]]
