@@ -11,6 +11,7 @@ from commands.schedule import *
 from commands.emails import *
 from commands.library import *
 from commands.other import *
+from commands.civrandom import *
 
 print("Bot started")
 
