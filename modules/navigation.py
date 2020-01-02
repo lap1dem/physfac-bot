@@ -167,3 +167,25 @@ def qmm_getsem(chat_id):
             return storage['qmmsem'+str(chat_id)]
         except KeyError:
             return []
+
+def civ_setncivs(chat_id, ncivs):
+    with sh.open(shelve_name) as storage:
+        storage['ncivs'+str(chat_id)] = ncivs
+
+def civ_getncivs(chat_id):
+    with sh.open(shelve_name) as storage:
+        try:
+            return storage['ncivs'+str(chat_id)]
+        except KeyError:
+            return []
+
+# def civ_setnames(chat_id, names):
+#     with sh.open(shelve_name) as storage:
+#         storage['names'+str(chat_id)] = ncivs
+#
+# def civ_getnames(chat_id):
+#     with sh.open(shelve_name) as storage:
+#         try:
+#             return storage['names'+str(chat_id)]
+#         except KeyError:
+#             return []

@@ -120,3 +120,10 @@ def sport_sch_key():
     for file in files:
         key.row(file)
     return key
+
+def civ_ncivs_key():
+    civs = ['5', '4', '3', '2', '1']
+    key = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+    for i in civs:
+        key.row(i)
+    return key
