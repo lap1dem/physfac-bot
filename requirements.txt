@@ -1,6 +1,0 @@
-pyTelegramBotAPI==3.6.6
-numpy
-openpyxl
-psycopg2
-datetime
-pandas
