@@ -1,7 +1,7 @@
 from implib import *
 
 import modules.keyboards as key
-import modules.navigation as navw
+import modules.navigation as nav
 import modules.help_functions as help
 import modules.data_access as data
 
