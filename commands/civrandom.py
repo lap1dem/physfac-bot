@@ -10,10 +10,6 @@ from civ_random.civrandom import *
 
 @bot.message_handler(commands=['civ'])
 def civ_start(message):
-    fullname = help.get_fullname(message)
-    print('"civ" command has been used by ' + fullname)
-    help.log_to_dialog(message, "emails")
-
     nav.delete_all(message.chat.id)
     markup_ncivs = key.civ_ncivs_key()
     markup_ncivs.row("Вихід")

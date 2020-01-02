@@ -19,9 +19,6 @@ def other_comands(message):
 
 @bot.message_handler(commands=['qmminka'])
 def qmminka_start(message):
-    fullname = help.get_fullname(message)
-    print('"qmminka" command has been used by ' + fullname)
-    help.log_to_dialog(message, "qmminka")
     reply = key.minkasem_key()
     bot.send_message(
         message.chat.id, 'Мінка з КМ. Оберіть семестр.', reply_markup=reply)
@@ -45,9 +42,6 @@ def qmminka(message):
 
 @bot.message_handler(commands=['ttclinic'])
 def ttpolyclinic(message):
-    fullname = help.get_fullname(message)
-    print('"ttclinic" command has been used by ' + fullname)
-    help.log_to_dialog(message, "ttclinic")
     bot.send_message(message.chat.id, "Розклад роботи поліклініки:")
     files = os.listdir(clinic_sch_path)
     opened_files = []
@@ -65,9 +59,6 @@ def ttpolyclinic(message):
 
 @bot.message_handler(commands=['ttsport'])
 def ttsport(message):
-    fullname = help.get_fullname(message)
-    print('"ttsport" command has been used by ' + fullname)
-    help.log_to_dialog(message, "ttsport")
     markup = key.sport_sch_key()
     bot.send_message(message.chat.id,
                      "Розклад роботи секцій спорткомплексу. Будь ласка, оберіть секцію.",
@@ -94,9 +85,6 @@ def send_sport_shchedule(message):
 
 @bot.message_handler(commands=['nord'])
 def nord(message):
-    fullname = help.get_fullname(message)
-    print('"nord" command has been used by ' + fullname)
-    help.log_to_dialog(message, "nord")
     is_num = data.get_nord()
     if is_num:
         bot.send_message(message.chat.id, "Цього тижня - чисельник.")
@@ -105,9 +93,6 @@ def nord(message):
 
 @bot.message_handler(commands=['plasminka'])
 def plasminka_start(message):
-    fullname = help.get_fullname(message)
-    print('"plasminka" command has been used by ' + fullname)
-    help.log_to_dialog(message, "plasminka")
     bot.send_message(
         message.chat.id, 'Мінка по формулах з предмету "Фізика плазми."')
     plasminka(message)
@@ -125,9 +110,6 @@ def plasminka(message):
 
 @bot.message_handler(commands=['edminka'])
 def edminka_start(message):
-    fullname = help.get_fullname(message)
-    print('"edminka" command has been used by ' + fullname)
-    help.log_to_dialog(message, "edminka")
     msg = bot.send_message(
         message.chat.id,
         "Мінка до екзамену з електродинаміки.\n\nСписок питань підготувала @cassini22."
@@ -148,9 +130,6 @@ def edminka(message):
 
 @bot.message_handler(commands=['exams'])
 def exams_start(message):
-    fullname = help.get_fullname(message)
-    print('"exams" command has been used by ' + fullname)
-    help.log_to_dialog(message, "exams")
     rep_key = key.stud_years()
     bot.send_message(
         message.chat.id,
