@@ -8,7 +8,7 @@ from civ_random.civrandom import *
 
 #  USER COMMANDS
 
-@bot.message_handler(commands=['civ'])
+@bot.message_handler(commands=['civ','цива'])
 def civ_start(message):
     nav.delete_all(message.chat.id)
     markup_ncivs = key.civ_ncivs_key()
