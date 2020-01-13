@@ -225,6 +225,12 @@ def registrated_users(conn, cur):
     return names
 
 @data_conn
+def get_chat_ids(conn, cur):
+    cur.execute("SELECT id FROM users")
+    ids = cur.fetchall()
+    return ids
+
+@data_conn
 def delete_users_table(conn, cur):
     cur.execute("DROP TABLE users")
     conn.commit()
