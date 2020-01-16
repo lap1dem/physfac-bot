@@ -207,3 +207,41 @@ def howmany(message):
 @bot.message_handler(commands=['chat_id'])
 def het_chat_id(message):
     bot.send_message(message.chat.id, str(message.chat.id))
+
+@bot.message_handler(commands=['get_admin'])
+def get_admin_start(message):
+    bot.send_message(message.chat.id, "Введіть пароль.")
+    bot.register_next_step_handler(message, get_admin_end)
+
+def get_admin_end(message):
+    print(data.get_password('get_admin'))
+    if message.text == 'Вихід':
+        pass
+    elif message.text == data.get_password('getadmin'):
+        data.make_admin(message.chat.id)
+
+        if data.check_admin(message.chat.id) == True:
+            bot.send_message(message.chat.id, "Успішно!")
+        else:
+            bot.send_message(message.chat.id, "Щось пішло не так...")
+
+    else:
+        bot.send_message(message.chat.id, "Пароль невірний, спробуйте ще, або напишіть 'Вихід'.")
+        bot.register_next_step_handler(message, get_admin_end)
+
+@bot.message_handler(commands=['informall'])
+def informall_start(message):
+    if data.check_admin(message.chat.id):
+        bot.send_message(message.chat.id, "Будь ласка, введіть повідомлення.")
+        bot.register_next_step_handler(message, informall_end)
+    else:
+        bot.send_message(message.chat.id, "Ви не адмін, сорі.")
+
+def informall_end(message):
+    ids = data.get_chat_ids()
+    print(ids)
+    for id in ids:
+        bot.send_message(
+            id[0],
+            message.text
+        )
