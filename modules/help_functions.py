@@ -2,17 +2,17 @@ from implib import *
 
 def translate_day(ukr_day):
     if ukr_day == c.week_days[0]:
-        return 'monday.png'
+        return 'Monday.png'
     elif ukr_day == c.week_days[1]:
-        return 'tuesday.png'
+        return 'Tuesday.png'
     elif ukr_day == c.week_days[2]:
-        return 'wednesday.png'
+        return 'Wednesday.png'
     elif ukr_day == c.week_days[3]:
-        return 'thursday.png'
+        return 'Thursday.png'
     elif ukr_day == c.week_days[4]:
-        return 'friday.png'
+        return 'Friday.png'
     elif ukr_day == c.week_days[5]:
-        return ['monday.png','tuesday.png','wednesday.png','thursday.png','friday.png']
+        return ['Monday.png','Tuesday.png','Wednesday.png','Thursday.png','Friday.png']
 
 def get_sch_folder(msg):
     if msg == '1 курс':
@@ -27,6 +27,8 @@ def get_sch_folder(msg):
         return 'M1'
     elif msg == '2 курс м.':
         return 'M2'
+    elif msg == 'Вчителі фізики (Туркменістан)':
+        return 'T'
     else:
         return None
 
