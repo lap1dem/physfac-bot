@@ -241,7 +241,10 @@ def informall_end(message):
     ids = data.get_chat_ids()
     print(ids)
     for id in ids:
-        bot.send_message(
-            id[0],
-            message.text
-        )
+        try:
+            bot.send_message(
+                id[0],
+                message.text
+            )
+        except ApiException:
+            pass
