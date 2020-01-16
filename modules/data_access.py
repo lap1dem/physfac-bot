@@ -73,6 +73,15 @@ def ctnord(conn, cur):
 
 ctnord()
 
+@data_conn
+def ctpasswords(conn, cur):
+    query = """CREATE TABLE IF NOT EXISTS passwords
+            (func TEXT NOT NULL,
+             password TEXT NOT NULL)"""
+    cur.execute(query)
+
+ctpasswords()
+
 
 @data_conn
 def get_list(conn, cur, table):
@@ -231,9 +240,21 @@ def get_chat_ids(conn, cur):
     return ids
 
 @data_conn
-def delete_users_table(conn, cur):
-    cur.execute("DROP TABLE users")
+def make_admin(conn, cur, id):
+    cur.execute("UPDATE users SET isadmin = TRUE WHERE id = %s", (id,))
     conn.commit()
+
+@data_conn
+def check_admin(conn, cur, id):
+    cur.execute("SELECT isadmin FROM users WHERE id = %s", (id,))
+    isadmin = cur.fetchall()[0]
+    return(isadmin[0])
+
+@data_conn
+def get_password(conn, cur, func):
+    cur.execute("SELECT password FROM passwords WHERE func = %s", (func,))
+    passw = cur.fetchall()
+    return(passw[0][0])
 
 
 #----------NORD----------
