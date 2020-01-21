@@ -78,8 +78,8 @@ def create_sch_message(df):
         lesnum = df.loc[df['lesnum'] == i]
         mod = ''
 
-        if len(df.loc[df['lesnum'] == i])==0 and len(df.loc[df['lesnum'] == i+1])==0 and i != 1 and i != 2:
-            break
+        if len(df.loc[df['lesnum'] == i])==0::
+            continue
 
         if i == 4 or len(df.loc[df['lesnum'] == i+1])==0:
             lesmsg = end + '*' + lesnum['leshead'].values[0] + '*\n'
