@@ -13,3 +13,11 @@ import random
 import pandas as pd
 import numpy as np
 from openpyxl import load_workbook
+
+import modules.navigation as nav
+
+def send_dev_msg(msg):
+    bot.send_message(
+        msg.chat.id,
+        c.dev_msg
+    )

@@ -10,6 +10,10 @@ from civ_random.civrandom import *
 
 @bot.message_handler(commands=['civ','цива'])
 def civ_start(message):
+    if nav.check_dev_mode():
+        send_dev_msg(message)
+        return None
+
     nav.delete_all(message.chat.id)
     markup_ncivs = key.civ_ncivs_key()
     markup_ncivs.row("Вихід")

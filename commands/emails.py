@@ -9,6 +9,10 @@ import modules.data_access as data
 
 @bot.message_handler(commands=['emails'])
 def whats_dep(message):
+    if nav.check_dev_mode():
+        send_dev_msg(message)
+        return None
+
     nav.delete_all(message.chat.id)
     markup_dep = key.email_dep()
     markup_dep.row("Вихід")

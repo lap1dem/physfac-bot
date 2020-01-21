@@ -12,6 +12,7 @@ from commands.emails import *
 from commands.library import *
 from commands.other import *
 from commands.civrandom import *
+from commands.schedule_plus import *
 
 print("Bot started")
 
@@ -36,6 +37,7 @@ def start(message):
         msg,
         parse_mode="Markdown"
     )
+
 
 
 @bot.message_handler(commands=['about'])

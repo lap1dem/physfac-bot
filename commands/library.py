@@ -9,6 +9,10 @@ import modules.data_access as data
 
 @bot.message_handler(commands=['library'])
 def lib_start(message):
+    if nav.check_dev_mode():
+        send_dev_msg(message)
+        return None
+
     nav.delete_all(message.chat.id)
     markup_years = key.lib_years(message.chat.id)
     markup_years.row('Вихід')
