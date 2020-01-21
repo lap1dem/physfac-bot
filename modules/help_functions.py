@@ -208,13 +208,13 @@ def create_sch_message(df):
                     lesmsg += mod + end + '*2-а підгрупа*' + '\n'
                     mod += '\t\t'
 
-                    if h1s1['aud'].values[0] != None:
-                        lesmsg += check_line_length(mod + join + h1s1['aud'].values[0] + '\n')
-                    if h1s1['teach'].values[0] == None:
-                        lesmsg += check_line_length(mod + end + h1s1['lesname'].values[0] + '\n')
+                    if h1s2['aud'].values[0] != None:
+                        lesmsg += check_line_length(mod + join + h1s2['aud'].values[0] + '\n')
+                    if h1s2['teach'].values[0] == None:
+                        lesmsg += check_line_length(mod + end + h1s2['lesname'].values[0] + '\n')
                     else:
-                        lesmsg += check_line_length(mod + join + h1s1['lesname'].values[0] + '\n')
-                        lesmsg += mod + end + h1s1['teach'].values[0] + '\n'
+                        lesmsg += check_line_length(mod + join + h1s2['lesname'].values[0] + '\n')
+                        lesmsg += mod + end + h1s2['teach'].values[0] + '\n'
 
                     mod = mod[:-2]
 
