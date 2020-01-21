@@ -5,21 +5,25 @@ import modules.navigation as nav
 import modules.help_functions as help
 import modules.data_access as data
 
-@bot.message_handler(commands=['extsch'])
+@bot.message_handler(commands=['textschedule'])
 def choosefunc(message):
 #     if nav.check_dev_mode():
 #         send_dev_msg(message)
 #         return None
 
     nav.delete_all(message.chat.id)
-    markup = key.custom_key(c.sch_plus_funcs)
-    markup.row('Вихід')
+    # markup = key.custom_key(c.sch_plus_funcs)
+    # markup.row('Вихід')
+    markup = key.sch_plus_years()
+    markup.row('Назад')
     msg = bot.send_message(
         message.chat.id,
-        "Розширені можливості для розкладу.\nБудь ласка, оберіть функцію зі списку.",
+        # "Розширені можливості для розкладу.\nБудь ласка, оберіть функцію зі списку.",
+        "Розклад у текстовому форматі.\nОберіть курс."
         reply_markup=markup)
 
-    bot.register_next_step_handler(msg, go_to_func)
+    # bot.register_next_step_handler(msg, go_to_func)
+    bot.register_next_step_handler(msg, choose_group)
 
 def go_to_func(message):
     if message.text == 'Вихід':
