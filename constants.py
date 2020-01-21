@@ -21,7 +21,7 @@ stud_years = [
 
 avaiable_comands='''
 /schedule - _Розклад занять_
-/textschedule = _Розклад в текстовому форматі_
+/textschedule - _Розклад в текстовому форматі_
 /nord - _Чисельник чи знаменник_
 /emails - _Дізнатись пошту викладача_
 /library - _Архів літератури_
