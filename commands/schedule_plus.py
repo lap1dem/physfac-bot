@@ -19,7 +19,7 @@ def choosefunc(message):
     msg = bot.send_message(
         message.chat.id,
         # "Розширені можливості для розкладу.\nБудь ласка, оберіть функцію зі списку.",
-        "Розклад у текстовому форматі.\nОберіть курс."
+        "Розклад у текстовому форматі.\nОберіть курс.",
         reply_markup=markup)
 
     # bot.register_next_step_handler(msg, go_to_func)
