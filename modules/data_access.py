@@ -1,4 +1,5 @@
 from implib import *
+from constants import *
 
 import modules.help_functions as help
 
@@ -286,3 +287,64 @@ def get_nord(conn, cur):
     if (nweeks+2)%2 == 0:
         return(row[3])
     return(not row[3])
+
+# =========================================
+# ==============SCHEDULE===================
+# =========================================
+
+@data_conn
+def sch_get_years(conn, cur):
+    cur.execute("SELECT DISTINCT year FROM schedule{}{}".format(cur_year, cur_semester))
+    years = cur.fetchall()
+    years = [y[0] for y in years]
+    k = ["1 курс", "2 курс", "3 курс", "4 курс", "1 курс магістри", "2 курс магістри"]
+    years = sorted(years, key = k.index)
+    return(years)
+
+@data_conn
+def sch_get_groups(conn, cur, year):
+    cur.execute("SELECT DISTINCT groupname FROM schedule{}{} WHERE year = %s".format(cur_year, cur_semester), (year,))
+    groups = cur.fetchall()
+    groups = [g[0] for g in groups]
+    groups = sorted(groups)
+    return(groups)
+
+@data_conn
+def sch_get_days(conn, cur, year, group):
+    cur.execute("SELECT DISTINCT day FROM schedule{}{} WHERE year = %s AND groupname = %s".format(cur_year, cur_semester), (year, group,))
+    days = cur.fetchall()
+    days = [d[0] for d in days]
+    k = ["Понеділок", "Вівторок", "Середа", "Четвер", "П'ятниця",]
+    days = sorted(days, key = k.index)
+    return(days)
+
+@data_conn
+def sch_get_lessons(conn, cur, year, group, day):
+    cur.execute("SELECT * FROM schedule{}{} WHERE year = %s AND groupname = %s AND day = %s".format(cur_year, cur_semester), (year, group, day,))
+    lessons = cur.fetchall()
+
+    df = pd.DataFrame(
+        lessons, columns = [
+            "year",
+            "day",
+            "groupname",
+            "leshead",
+            "lesnum",
+            "timestart",
+            "timeend",
+            "lesname",
+            "aud",
+            "teach",
+            "sg",
+            "half",
+        ]
+    )
+
+    df.sort_values(by=['lesnum', 'half', 'sg'], na_position='first', inplace=True)
+
+    return(df)
+
+df = sch_get_lessons('4 курс', 'Астрономія', "Понеділок")
+df
+# h1 = df.loc[(df['half'] == 1) & (df.isna()['sg'] == True)]
+# h1

@@ -10,6 +10,9 @@ import modules.data_access as data
 
 @bot.message_handler(commands=['other'])
 def other_comands(message):
+    if nav.check_dev_mode():
+        send_dev_msg(message)
+        return None
     msg = "*Інші команди*:\n" + c.other_comands
     bot.send_message(
         message.chat.id,
@@ -19,6 +22,10 @@ def other_comands(message):
 
 @bot.message_handler(commands=['qmminka'])
 def qmminka_start(message):
+    if nav.check_dev_mode():
+        send_dev_msg(message)
+        return None
+
     reply = key.minkasem_key()
     bot.send_message(
         message.chat.id, 'Мінка з КМ. Оберіть семестр.', reply_markup=reply)
@@ -42,6 +49,10 @@ def qmminka(message):
 
 @bot.message_handler(commands=['ttclinic'])
 def ttpolyclinic(message):
+    if nav.check_dev_mode():
+        send_dev_msg(message)
+        return None
+
     bot.send_message(message.chat.id, "Розклад роботи поліклініки:")
     files = os.listdir(clinic_sch_path)
     opened_files = []
@@ -59,6 +70,10 @@ def ttpolyclinic(message):
 
 @bot.message_handler(commands=['ttsport'])
 def ttsport(message):
+    if nav.check_dev_mode():
+        send_dev_msg(message)
+        return None
+
     markup = key.sport_sch_key()
     bot.send_message(message.chat.id,
                      "Розклад роботи секцій спорткомплексу. Будь ласка, оберіть секцію.",
@@ -85,6 +100,10 @@ def send_sport_shchedule(message):
 
 @bot.message_handler(commands=['nord'])
 def nord(message):
+    if nav.check_dev_mode():
+        send_dev_msg(message)
+        return None
+
     is_num = data.get_nord()
     if is_num:
         bot.send_message(message.chat.id, "Цього тижня - чисельник.")
@@ -110,6 +129,10 @@ def plasminka(message):
 
 @bot.message_handler(commands=['edminka'])
 def edminka_start(message):
+    if nav.check_dev_mode():
+        send_dev_msg(message)
+        return None
+
     msg = bot.send_message(
         message.chat.id,
         "Мінка до екзамену з електродинаміки.\n\nСписок питань підготувала @cassini22."
@@ -130,6 +153,10 @@ def edminka(message):
 
 @bot.message_handler(commands=['exams'])
 def exams_start(message):
+    if nav.check_dev_mode():
+        send_dev_msg(message)
+        return None
+
     rep_key = key.stud_years()
     bot.send_message(
         message.chat.id,
@@ -239,7 +266,7 @@ def informall_start(message):
 
 def informall_end(message):
     ids = data.get_chat_ids()
-    print(ids)
+
     for id in ids:
         try:
             bot.send_message(
@@ -248,3 +275,20 @@ def informall_end(message):
             )
         except ApiException:
             pass
+
+
+@bot.message_handler(commands=['setdevmode'])
+def other_comands(message):
+    nav.set_dev_mode()
+    bot.send_message(
+        message.chat.id,
+        "Режим розробника увімкнено."
+    )
+
+@bot.message_handler(commands=['unsetdevmode'])
+def other_comands(message):
+    nav.unset_dev_mode()
+    bot.send_message(
+        message.chat.id,
+        "Режим розробника вимкнено."
+    )

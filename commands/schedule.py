@@ -8,6 +8,10 @@ import modules.help_functions as help
 
 @bot.message_handler(commands=['schedule'])
 def whats_year(message):
+    if nav.check_dev_mode():
+        send_dev_msg(message)
+        return None
+        
     nav.delete_all(message.chat.id)
     nav.del_schedule_path(message.chat.id)
     nav.update_schedule_path(message.chat.id, sch_path)

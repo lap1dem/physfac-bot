@@ -41,6 +41,40 @@ def schedule_step_back(chat_id):
     replace_schedule_path(chat_id, new_path)
 
 
+# --------------SCHEDULE PLUS----------------------
+def sch_set_year(chat_id, year):
+    with sh.open(shelve_name) as storage:
+        storage['schyear'+str(chat_id)] = year
+
+def sch_get_year(chat_id):
+    with sh.open(shelve_name) as storage:
+        try:
+            return storage['schyear'+str(chat_id)]
+        except KeyError:
+            return None
+
+def sch_set_group(chat_id, group):
+    with sh.open(shelve_name) as storage:
+        storage['schgroup'+str(chat_id)] = group
+
+def sch_get_group(chat_id):
+    with sh.open(shelve_name) as storage:
+        try:
+            return storage['schgroup'+str(chat_id)]
+        except KeyError:
+            return None
+
+def sch_set_day(chat_id, day):
+    with sh.open(shelve_name) as storage:
+        storage['schgroup'+str(chat_id)] = day
+
+def sch_get_day(chat_id):
+    with sh.open(shelve_name) as storage:
+        try:
+            return storage['schday'+str(chat_id)]
+        except KeyError:
+            return None
+
 
 # ---------------EMAILS-----------------------------
 
@@ -179,6 +213,8 @@ def civ_getncivs(chat_id):
         except KeyError:
             return []
 
+
+
 # def civ_setnames(chat_id, names):
 #     with sh.open(shelve_name) as storage:
 #         storage['names'+str(chat_id)] = ncivs
@@ -189,3 +225,19 @@ def civ_getncivs(chat_id):
 #             return storage['names'+str(chat_id)]
 #         except KeyError:
 #             return []
+
+def set_dev_mode():
+    with sh.open(shelve_name) as storage:
+        storage['dev_mode'] = True
+
+def unset_dev_mode():
+    with sh.open(shelve_name) as storage:
+        storage['dev_mode'] = False
+        # del storage['dev_mode']
+
+def check_dev_mode():
+    with sh.open(shelve_name) as storage:
+        try:
+            return storage['dev_mode']
+        except KeyError:
+            return []
