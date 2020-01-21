@@ -344,7 +344,7 @@ def sch_get_lessons(conn, cur, year, group, day):
 
     return(df)
 
-# df = sch_get_lessons('4 курс', 'Квантова теорія поля', "Вівторок")
-# df
+df = sch_get_lessons('2 курс', 'Група 2 (Фізика+Астрономія+ІВТ)', "Середа")
+df
 # h1 = df.loc[(df['half'] == 1) & (df.isna()['sg'] == True)]
 # h1
