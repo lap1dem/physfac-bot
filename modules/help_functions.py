@@ -53,7 +53,25 @@ def log_to_dialog(message, function):
             fullname = help.get_fullname(message)
             bot.send_message(394701484, function + "\n" + fullname)
 
+def check_line_length(line):
+    if len(line) > 40:
+        parts = line.split(' ')
+        res = ''
+        line = ''
+        for i in range(len(parts)):
+            line += ' '+parts[i]
+            if i == 0:
+                line = line[1:]
 
+            if len(line) > 30 or i == len(parts)-1:
+                res += line
+                line = ''
+                if not i == len(parts)-1:
+                    res += '\n \t\t\t\t\t\t\t\t'
+
+        return res
+    else:
+        return line
 
 def create_sch_message(df):
     join = '├ '
@@ -113,11 +131,11 @@ def create_sch_message(df):
 
         if not False in [x.empty for x in [h1,h2,s1,s2,h1s1,h1s2,h2s1,h2s2]]:
             if lesnum['aud'].values[0] != None:
-                lesmsg += mod + join + lesnum['aud'].values[0] + '\n'
+                lesmsg += check_line_length(mod + join + lesnum['aud'].values[0] + '\n')
             if lesnum['teach'].values[0] == None:
-                lesmsg += mod + end + lesnum['lesname'].values[0] + '\n'
+                lesmsg += check_line_length(mod + end + lesnum['lesname'].values[0] + '\n')
             else:
-                lesmsg += mod + join + lesnum['lesname'].values[0] + '\n'
+                lesmsg += check_line_length(mod + join + lesnum['lesname'].values[0] + '\n')
                 lesmsg += mod + end + lesnum['teach'].values[0] + '\n'
 
         else:
@@ -131,11 +149,11 @@ def create_sch_message(df):
                     mod += dash + '\t'
 
                 if h1['aud'].values[0] != None:
-                    lesmsg += mod + join + h1['aud'].values[0] + '\n'
+                    lesmsg += check_line_length(mod + join + h1['aud'].values[0] + '\n')
                 if h1['teach'].values[0] == None:
-                    lesmsg += mod + end + h1['lesname'].values[0] + '\n'
+                    lesmsg += check_line_length(mod + end + h1['lesname'].values[0] + '\n')
                 else:
-                    lesmsg += mod + join + h1['lesname'].values[0] + '\n'
+                    lesmsg += check_line_length(mod + join + h1['lesname'].values[0] + '\n')
                     lesmsg += mod + end + h1['teach'].values[0] + '\n'
 
                 mod = mod[:-3]
@@ -149,11 +167,11 @@ def create_sch_message(df):
                     mod += dash + '\t'
 
                 if s1['aud'].values[0] != None:
-                    lesmsg += mod + join + s1['aud'].values[0] + '\n'
+                    lesmsg += check_line_length(mod + join + s1['aud'].values[0] + '\n')
                 if s1['teach'].values[0] == None:
-                    lesmsg += mod + end + s1['lesname'].values[0] + '\n'
+                    lesmsg += check_line_length(mod + end + s1['lesname'].values[0] + '\n')
                 else:
-                    lesmsg += mod + join + s1['lesname'].values[0] + '\n'
+                    lesmsg += check_line_length(mod + join + s1['lesname'].values[0] + '\n')
                     lesmsg += mod + end + s1['teach'].values[0] + '\n'
 
 
@@ -177,11 +195,11 @@ def create_sch_message(df):
                         mod += dash + '\t'
 
                     if h1s1['aud'].values[0] != None:
-                        lesmsg += mod + join + h1s1['aud'].values[0] + '\n'
+                        lesmsg += check_line_length(mod + join + h1s1['aud'].values[0] + '\n')
                     if h1s1['teach'].values[0] == None:
-                        lesmsg += mod + end + h1s1['lesname'].values[0] + '\n'
+                        lesmsg += check_line_length(mod + end + h1s1['lesname'].values[0] + '\n')
                     else:
-                        lesmsg += mod + join + h1s1['lesname'].values[0] + '\n'
+                        lesmsg += check_line_length(mod + join + h1s1['lesname'].values[0] + '\n')
                         lesmsg += mod + end + h1s1['teach'].values[0] + '\n'
 
                         mod = mod[:-2]
@@ -191,11 +209,11 @@ def create_sch_message(df):
                     mod += '\t\t'
 
                     if h1s1['aud'].values[0] != None:
-                        lesmsg += mod + join + h1s1['aud'].values[0] + '\n'
+                        lesmsg += check_line_length(mod + join + h1s1['aud'].values[0] + '\n')
                     if h1s1['teach'].values[0] == None:
-                        lesmsg += mod + end + h1s1['lesname'].values[0] + '\n'
+                        lesmsg += check_line_length(mod + end + h1s1['lesname'].values[0] + '\n')
                     else:
-                        lesmsg += mod + join + h1s1['lesname'].values[0] + '\n'
+                        lesmsg += check_line_length(mod + join + h1s1['lesname'].values[0] + '\n')
                         lesmsg += mod + end + h1s1['teach'].values[0] + '\n'
 
                     mod = mod[:-2]
@@ -207,11 +225,11 @@ def create_sch_message(df):
                 mod += '\t\t'
 
                 if s2['aud'].values[0] != None:
-                    lesmsg += mod + join + s2['aud'].values[0] + '\n'
+                    lesmsg += check_line_length(mod + join + s2['aud'].values[0] + '\n')
                 if s2['teach'].values[0] == None:
-                    lesmsg += mod + end + s2['lesname'].values[0] + '\n'
+                    lesmsg += check_line_length(mod + end + s2['lesname'].values[0] + '\n')
                 else:
-                    lesmsg += mod + join + s2['lesname'].values[0] + '\n'
+                    lesmsg += check_line_length(mod + join + s2['lesname'].values[0] + '\n')
                     lesmsg += mod + end + s2['teach'].values[0] + '\n'
 
                 mod = mod[:-2]
@@ -222,11 +240,11 @@ def create_sch_message(df):
                 mod += '\t\t'
 
                 if h2['aud'].values[0] != None:
-                    lesmsg += mod + join + h2['aud'].values[0] + '\n'
+                    lesmsg += (mod + join + h2['aud'].values[0] + '\n')
                 if h2['teach'].values[0] == None:
-                    lesmsg += mod + end + h2['lesname'].values[0] + '\n'
+                    lesmsg += check_line_length(mod + end + h2['lesname'].values[0] + '\n')
                 else:
-                    lesmsg += mod + join + h2['lesname'].values[0] + '\n'
+                    lesmsg += check_line_length(mod + join + h2['lesname'].values[0] + '\n')
                     lesmsg += mod + end + h2['teach'].values[0] + '\n'
 
                 mod = mod[:-2]
@@ -244,11 +262,11 @@ def create_sch_message(df):
                         mod += dash + '\t'
 
                     if h2s1['aud'].values[0] != None:
-                        lesmsg += mod + join + h2s1['aud'].values[0] + '\n'
+                        lesmsg += check_line_length(mod + join + h2s1['aud'].values[0] + '\n')
                     if h2s1['teach'].values[0] == None:
-                        lesmsg += mod + end + h2s1['lesname'].values[0] + '\n'
+                        lesmsg += check_line_length(mod + end + h2s1['lesname'].values[0] + '\n')
                     else:
-                        lesmsg += mod + join + h2s1['lesname'].values[0] + '\n'
+                        lesmsg += check_line_length(mod + join + h2s1['lesname'].values[0] + '\n')
                         lesmsg += mod + end + h2s1['teach'].values[0] + '\n'
 
                     mod = mod[:-3]
@@ -258,11 +276,11 @@ def create_sch_message(df):
                     mod += '\t\t'
 
                     if h2s2['aud'].values[0] != None:
-                        lesmsg += mod + join + h2s2['aud'].values[0] + '\n'
+                        lesmsg += check_line_length(mod + join + h2s2['aud'].values[0] + '\n')
                     if h2s2['teach'].values[0] == None:
-                        lesmsg += mod + end + h2s2['lesname'].values[0] + '\n'
+                        lesmsg += check_line_length(mod + end + h2s2['lesname'].values[0] + '\n')
                     else:
-                        lesmsg += mod + join + h2s2['lesname'].values[0] + '\n'
+                        lesmsg += check_line_length(mod + join + h2s2['lesname'].values[0] + '\n')
                         lesmsg += mod + end + h2s2['teach'].values[0] + '\n'
 
                     mod = mod[:-2]
