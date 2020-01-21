@@ -54,7 +54,7 @@ def log_to_dialog(message, function):
             bot.send_message(394701484, function + "\n" + fullname)
 
 def check_line_length(line):
-    if len(line) > 40:
+    if len(line) > 30:
         parts = line.split(' ')
         res = ''
         line = ''
@@ -63,7 +63,7 @@ def check_line_length(line):
             if i == 0:
                 line = line[1:]
 
-            if len(line) > 30 or i == len(parts)-1:
+            if len(line) > 20 or i == len(parts)-1:
                 res += line
                 line = ''
                 if not i == len(parts)-1:
