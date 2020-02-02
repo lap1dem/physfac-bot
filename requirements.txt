@@ -6,4 +6,4 @@ datetime
 pandas
 pillow
 python-Levenshtein
-fuzzy-wuzzy
+fuzzywuzzy
