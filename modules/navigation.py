@@ -213,6 +213,19 @@ def civ_getncivs(chat_id):
         except KeyError:
             return []
 
+def civ_setcivbans(chat_id, bans):
+    with sh.open(shelve_name) as storage:
+        storage['civbans'+str(chat_id)] = bans
+
+def civ_getcivbans(chat_id):
+    with sh.open(shelve_name) as storage:
+        try:
+            return storage['civbans'+str(chat_id)]
+        except KeyError:
+            return []
+
+
+
 
 
 # def civ_setnames(chat_id, names):

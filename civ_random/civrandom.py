@@ -2,9 +2,11 @@ import os
 import random
 import numpy as np
 from PIL import Image, ImageFont, ImageDraw
+from spellcheck import SpellCheck
 
 dir = 'civ_random/'
 W, H = (256,64)
+
 font = ImageFont.truetype(dir + 'albertus-nova/Albertus Nova.otf', 24)
 
 def draw_name(name):
@@ -66,16 +68,18 @@ def remove_results():
     for res in results:
         os.remove(dir + 'results/'+res)
 
-def civrandom(names, ncivs):
+def civrandom(names, ncivs, bans):
+    # bans - array of names without .jpg
     remove_results()
 
+    bans = [ban + '.jpg' for ban in bans]
     iconlist = os.listdir(dir + 'icons')
-    bans = [
-        'Іспанія.jpg',
-        'Вавилон.jpg',
-        'Гуни.jpg',
-        'Венеція.jpg',
-    ]
+    # bans = [
+    #     'Іспанія.jpg',
+    #     'Вавилон.jpg',
+    #     'Гуни.jpg',
+    #     'Венеція.jpg',
+    # ]
 
     to_random = [i for i in iconlist if not i in bans]
 
@@ -101,3 +105,18 @@ def civrandom(names, ncivs):
         player_blocks[i].save(dir + "results/" + str(i) + ".png")
     final_img = get_concat_h(player_blocks)
     final_img.save(dir + "results/civrandom.png")
+
+def civ_spell_check(words):
+    # words - array of strings
+    civ_dict = SpellCheck('civ_random/civ_dict.txt')
+    corr_words = []
+
+    for word in words:
+        civ_dict.check(word)
+        if len(civ_dict.suggestions()) == 0:
+            continue
+        corr_words.append(civ_dict.correct().capitalize())
+
+    return(corr_words)
+
+

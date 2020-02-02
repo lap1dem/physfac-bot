@@ -53,6 +53,7 @@ def log_to_dialog(message, function):
             fullname = help.get_fullname(message)
             bot.send_message(394701484, function + "\n" + fullname)
 
+
 def check_line_length(line):
     if len(line) > 25:
         parts = line.split(' ')
