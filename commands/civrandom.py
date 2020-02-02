@@ -10,9 +10,9 @@ from civ_random.civrandom import *
 
 @bot.message_handler(commands=['civ','цива'])
 def civ_start(message):
-    if nav.check_dev_mode():
-        send_dev_msg(message)
-        return None
+    # if nav.check_dev_mode():
+    #     send_dev_msg(message)
+    #     return None
 
     nav.delete_all(message.chat.id)
     markup_ncivs = key.civ_ncivs_key()
@@ -22,9 +22,9 @@ def civ_start(message):
         "Рандомайзер націй в Civilization V.\nОберіть число націй на гравця.",
         reply_markup=markup_ncivs,
     )
-    bot.register_next_step_handler(msg, civ_names)
+    bot.register_next_step_handler(msg, civ_bans)
 
-def civ_names(message):
+def civ_bans(message):
     if message.text == "Вихід":
         pass
 
@@ -39,6 +39,26 @@ def civ_names(message):
 
     else:
         nav.civ_setncivs(message.chat.id, message.text)
+        reply_markup = key.custom_key(c.civ_ban_choices)
+        reply_markup.row('Вихід')
+        msg = bot.send_message(
+            message.chat.id,
+            "Виберіть варіант банів зі списку, або введіть нації через кому українською.",
+            reply_markup=reply_markup,
+        )
+        bot.register_next_step_handler(msg, civ_names)
+
+def civ_names(message):
+    if message.text == "Вихід":
+        pass
+
+    else:
+        if message.text == "Без банів":
+            bans = ''
+        else:
+            bans = message.text
+
+        nav.civ_setcivbans(message.chat.id, bans)
         key_rem = telebot.types.ReplyKeyboardRemove()
         msg = bot.send_message(
             message.chat.id,
@@ -50,17 +70,30 @@ def civ_names(message):
 def civ_final(message):
     names = message.text
     ncivs = int(nav.civ_getncivs(message.chat.id))
-    civrandom(names, ncivs)
+    bans = nav.civ_getcivbans(message.chat.id)
+    bans = [x.strip() for x in bans.split(',')]
+    bans = civ_spell_check(bans)
+    bans_string = ''
+
+    for b in bans:
+        bans_string += b +', '
+
+    bans_string = bans_string[:-2]
+    if bans_string == '':
+        bans_string = 'Відсутні'
+
+    bot.send_message(message.chat.id, "Забанені нації:\n" + bans_string)
+    civrandom(names, ncivs, bans)
     photos = []
     reslist = os.listdir('civ_random/results')
     reslist = [i for i in reslist if i != 'civrandom.png']
-    for file in reslist:
-        photos.append(
-            InputMediaPhoto(
-                open('civ_random/results/' + file, 'rb')
-            )
-        )
-    bot.send_media_group(message.chat.id, photos)
+    # for file in reslist:
+    #     photos.append(
+    #         InputMediaPhoto(
+    #             open('civ_random/results/' + file, 'rb')
+    #         )
+    #     )
+    # bot.send_media_group(message.chat.id, photos)
     bot.send_media_group(message.chat.id, [InputMediaPhoto(
         open('civ_random/results/' + 'civrandom.png', 'rb')
     )])
