@@ -1,20 +1,24 @@
 import os
+from implib import *
 import random
 import numpy as np
 from PIL import Image, ImageFont, ImageDraw
-from spellcheck import SpellCheck
+import difflib
+
 
 dir = 'civ_random/'
-W, H = (256,64)
+W, H = (256, 64)
 
 font = ImageFont.truetype(dir + 'albertus-nova/Albertus Nova.otf', 24)
+
 
 def draw_name(name):
     NAME = Image.open(dir + "NAME.jpg")
     draw = ImageDraw.Draw(NAME)
     w, h = draw.textsize(name, font=font)
-    draw.text(((W-w)/2,(H-h)/2), name, font=font, fill="black")
+    draw.text(((W - w) / 2, (H - h) / 2), name, font=font, fill="black")
     return(NAME)
+
 
 def get_concat_h(images):
     widths = [im.width for im in images]
@@ -33,6 +37,7 @@ def get_concat_h(images):
 
     return res
 
+
 def get_concat_v(images):
     widths = [im.width for im in images]
     heights = [im.height for im in images]
@@ -50,6 +55,7 @@ def get_concat_v(images):
 
     return res
 
+
 def get_player_block(plhead, nations):
     '''
     plhead - PIL image
@@ -63,10 +69,12 @@ def get_player_block(plhead, nations):
     block = get_concat_v(imgs)
     return(block)
 
+
 def remove_results():
     results = os.listdir(dir + 'results/')
     for res in results:
-        os.remove(dir + 'results/'+res)
+        os.remove(dir + 'results/' + res)
+
 
 def civrandom(names, ncivs, bans):
     # bans - array of names without .jpg
@@ -106,17 +114,18 @@ def civrandom(names, ncivs, bans):
     final_img = get_concat_h(player_blocks)
     final_img.save(dir + "results/civrandom.png")
 
+
 def civ_spell_check(words):
     # words - array of strings
-    civ_dict = SpellCheck('civ_random/civ_dict.txt')
+    from civ_random.civ_dict import civ_dict
     corr_words = []
 
     for word in words:
-        civ_dict.check(word)
-        if len(civ_dict.suggestions()) == 0:
-            continue
-        corr_words.append(civ_dict.correct().capitalize())
+        word_list = difflib.get_close_matches(word, civ_dict, n=1)
+
+        if len(word_list) != 0:
+            corr_words.append(word_list[0].capitalize())
+        else:
+            pass
 
     return(corr_words)
-
-

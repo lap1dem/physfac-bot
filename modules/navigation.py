@@ -1,4 +1,8 @@
-from implib import *
+from config import *
+import json
+import os
+import shelve as sh
+
 
 def delete_all(chat_id):
     with sh.open(shelve_name) as storage:
