@@ -7,13 +7,16 @@ import difflib
 
 
 dir = 'civ_random/'
-W, H = (256, 64)
+# W, H = (256, 64)
+W, H = (1024, 256)
 
-font = ImageFont.truetype(dir + 'albertus-nova/Albertus Nova.otf', 24)
+font = ImageFont.truetype(dir + 'albertus-nova/Albertus Nova.otf', 92)
 
+NAMEname = "NAME2.jpg"
+iconsdir = 'icons2'
 
 def draw_name(name):
-    NAME = Image.open(dir + "NAME.jpg")
+    NAME = Image.open(dir + NAMEname)
     draw = ImageDraw.Draw(NAME)
     w, h = draw.textsize(name, font=font)
     draw.text(((W - w) / 2, (H - h) / 2), name, font=font, fill="black")
@@ -63,7 +66,7 @@ def get_player_block(plhead, nations):
     '''
     imgs = [plhead]
     for nation in nations:
-        img = Image.open(os.path.join(dir + 'icons', nation))
+        img = Image.open(os.path.join(dir + iconsdir, nation))
         imgs.append(img)
 
     block = get_concat_v(imgs)
@@ -81,7 +84,7 @@ def civrandom(names, ncivs, bans):
     remove_results()
 
     bans = [ban + '.jpg' for ban in bans]
-    iconlist = os.listdir(dir + 'icons')
+    iconlist = os.listdir(dir + iconsdir)
     # bans = [
     #     'Іспанія.jpg',
     #     'Вавилон.jpg',
