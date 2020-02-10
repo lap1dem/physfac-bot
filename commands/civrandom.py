@@ -83,6 +83,7 @@ def civ_final(message):
         bans_string = 'Відсутні'
 
     bot.send_message(message.chat.id, "Забанені нації:\n" + bans_string)
+    bot.send_message(message.chat.id, "Зачекайте секунду...")
     civrandom(names, ncivs, bans)
     photos = []
     reslist = os.listdir('civ_random/results')
@@ -94,6 +95,7 @@ def civ_final(message):
     #         )
     #     )
     # bot.send_media_group(message.chat.id, photos)
+
     bot.send_media_group(message.chat.id, [InputMediaPhoto(
         open('civ_random/results/' + 'civrandom.png', 'rb')
     )])
