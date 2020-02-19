@@ -79,6 +79,13 @@ def civ_final(message):
     bans = civ_spell_check(bans)
     bans_string = ''
 
+    if len(names) * len(ncivs) + len(bans) > 43:
+        bot.send_message(
+        message.chat.id,
+        "У грі всього 43 нації - на всіх не вистачить.\nОберіть менше число націй на гравця.",
+        )
+        return None
+
     for b in bans:
         bans_string += b + ', '
 
@@ -101,7 +108,7 @@ def civ_final(message):
     # bot.send_media_group(message.chat.id, photos)
     filesize = os.stat('civ_random/results/' + 'civrandom.png').st_size / 1048576
 
-    if filesize < 11.0:
+    if filesize < 10.0:
         bot.send_photo(message.chat.id, open('civ_random/results/' + 'civrandom.png', 'rb'))
     else:
         bot.send_document(message.chat.id, open('civ_random/results/' + 'civrandom.png', 'rb'))
