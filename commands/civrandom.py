@@ -99,6 +99,9 @@ def civ_final(message):
     #         )
     #     )
     # bot.send_media_group(message.chat.id, photos)
-
-    bot.send_photo(message.chat.id, open('civ_random/results/' + 'civrandom.png', 'rb'))
-    # bot.send_document(message.chat.id, open('civ_random/results/' + 'civrandom.png', 'rb'))
+    filesize = os.stat('civ_random/results/' + 'civrandom.png').st_size / 1048576
+    
+    if filesize < 11.0:
+        bot.send_photo(message.chat.id, open('civ_random/results/' + 'civrandom.png', 'rb'))
+    else:
+        bot.send_document(message.chat.id, open('civ_random/results/' + 'civrandom.png', 'rb'))

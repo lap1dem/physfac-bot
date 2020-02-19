@@ -136,10 +136,11 @@ def civ_spell_check(words):
 
 def get_final_image(player_blocks):
     plen = len(player_blocks)
+    phalf = int(plen/2)
     if plen > 5 and plen % 2 == 0:
         fin_im = get_concat_v([
-            get_concat_h(player_blocks[:plen/2]),
-            get_concat_h(player_blocks[plen/2:]),
+            get_concat_h(player_blocks[:phalf]),
+            get_concat_h(player_blocks[phalf:]),
         ])
     else:
         fin_im = get_concat_h(player_blocks)
