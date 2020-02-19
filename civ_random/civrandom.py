@@ -112,9 +112,9 @@ def civrandom(names, ncivs, bans):
         rand_civs[i],
     ) for i in range(len(rand_civs))]
 
-    for i in range(len(player_blocks)):
-        player_blocks[i].save(dir + "results/" + str(i) + ".png")
-    final_img = get_concat_h(player_blocks)
+    # for i in range(len(player_blocks)):
+    #     player_blocks[i].save(dir + "results/" + str(i) + ".png")
+    final_img = get_final_image(player_blocks)
     final_img.save(dir + "results/civrandom.png")
 
 
@@ -132,3 +132,16 @@ def civ_spell_check(words):
             pass
 
     return(corr_words)
+
+
+def get_final_image(player_blocks):
+    plen = len(player_blocks)
+    if plen > 5 and plen % 2 == 0:
+        fin_im = get_concat_v([
+            get_concat_h(player_blocks[:plen/2]),
+            get_concat_h(player_blocks[plen/2:]),
+        ])
+    else:
+        fin_im = get_concat_h(player_blocks)
+
+    return fin_im
