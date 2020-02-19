@@ -79,7 +79,7 @@ def civ_final(message):
     bans = civ_spell_check(bans)
     bans_string = ''
 
-    if len(names) * len(ncivs) + len(bans) > 43:
+    if len(names) * ncivs + len(bans) > 43:
         bot.send_message(
         message.chat.id,
         "У грі всього 43 нації - на всіх не вистачить.\nОберіть менше число націй на гравця.",
