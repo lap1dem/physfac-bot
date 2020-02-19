@@ -8,7 +8,8 @@ from civ_random.civrandom import *
 
 #  USER COMMANDS
 
-@bot.message_handler(commands=['civ','цива'])
+
+@bot.message_handler(commands=['civ', 'цива'])
 def civ_start(message):
     # if nav.check_dev_mode():
     #     send_dev_msg(message)
@@ -23,6 +24,7 @@ def civ_start(message):
         reply_markup=markup_ncivs,
     )
     bot.register_next_step_handler(msg, civ_bans)
+
 
 def civ_bans(message):
     if message.text == "Вихід":
@@ -48,6 +50,7 @@ def civ_bans(message):
         )
         bot.register_next_step_handler(msg, civ_names)
 
+
 def civ_names(message):
     if message.text == "Вихід":
         pass
@@ -67,6 +70,7 @@ def civ_names(message):
         )
         bot.register_next_step_handler(msg, civ_final)
 
+
 def civ_final(message):
     names = message.text
     ncivs = int(nav.civ_getncivs(message.chat.id))
@@ -76,7 +80,7 @@ def civ_final(message):
     bans_string = ''
 
     for b in bans:
-        bans_string += b +', '
+        bans_string += b + ', '
 
     bans_string = bans_string[:-2]
     if bans_string == '':
@@ -96,6 +100,5 @@ def civ_final(message):
     #     )
     # bot.send_media_group(message.chat.id, photos)
 
-    bot.send_media_group(message.chat.id, [InputMediaPhoto(
-        open('civ_random/results/' + 'civrandom.png', 'rb')
-    )])
+    bot.send_photo(message.chat.id, open('civ_random/results/' + 'civrandom.png', 'rb'))
+    bot.send_document(message.chat.id, open('civ_random/results/' + 'civrandom.png', 'rb'))
