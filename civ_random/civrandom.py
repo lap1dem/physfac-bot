@@ -79,7 +79,7 @@ def remove_results():
         os.remove(dir + 'results/' + res)
 
 
-def civrandom(names, ncivs, bans):
+def civrandom(namelist, ncivs, bans):
     # bans - array of names without .jpg
     remove_results()
 
@@ -94,7 +94,6 @@ def civrandom(names, ncivs, bans):
 
     to_random = [i for i in iconlist if not i in bans]
 
-    namelist = [x.strip() for x in names.split(',')]
     random.shuffle(namelist)
 
     player_headers = [draw_name(name) for name in namelist]
