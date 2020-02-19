@@ -73,13 +73,14 @@ def civ_names(message):
 
 def civ_final(message):
     names = message.text
+    namelist = [x.strip() for x in names.split(',')]
     ncivs = int(nav.civ_getncivs(message.chat.id))
     bans = nav.civ_getcivbans(message.chat.id)
     bans = [x.strip() for x in bans.split(',')]
     bans = civ_spell_check(bans)
     bans_string = ''
 
-    if len(names) * ncivs + len(bans) > 43:
+    if len(namelist) * ncivs + len(bans) > 43:
         bot.send_message(
         message.chat.id,
         "У грі всього 43 нації - на всіх не вистачить.\nОберіть менше число націй на гравця.",
@@ -95,7 +96,7 @@ def civ_final(message):
 
     bot.send_message(message.chat.id, "Забанені нації:\n" + bans_string)
     bot.send_message(message.chat.id, "Зачекайте секунду...")
-    civrandom(names, ncivs, bans)
+    civrandom(namelist, ncivs, bans)
     photos = []
     reslist = os.listdir('civ_random/results')
     reslist = [i for i in reslist if i != 'civrandom.png']
