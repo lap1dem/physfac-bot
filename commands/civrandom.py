@@ -101,4 +101,4 @@ def civ_final(message):
     # bot.send_media_group(message.chat.id, photos)
 
     bot.send_photo(message.chat.id, open('civ_random/results/' + 'civrandom.png', 'rb'))
-    bot.send_document(message.chat.id, open('civ_random/results/' + 'civrandom.png', 'rb'))
+    # bot.send_document(message.chat.id, open('civ_random/results/' + 'civrandom.png', 'rb'))
