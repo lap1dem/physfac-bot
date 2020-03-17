@@ -1,3 +1,5 @@
+from telebot.apihelper import ApiException
+
 from implib import *
 
 import modules.keyboards as key
@@ -222,15 +224,6 @@ def setdenominator(message):
     bot.send_message(message.chat.id, "Зроблено! Тепер - знаменник.")
 
 
-@bot.message_handler(commands=['howmany'])
-def howmany(message):
-    data = database.SQL(database_name)
-    n = data.count_rows('users')
-    data.close()
-    bot.send_message(
-        message.chat.id, "З ботом контактували " + str(n) + " юзерів.")
-
-
 @bot.message_handler(commands=['chat_id'])
 def het_chat_id(message):
     bot.send_message(message.chat.id, str(message.chat.id))
@@ -278,7 +271,7 @@ def informall_end(message):
 
 
 @bot.message_handler(commands=['setdevmode'])
-def other_comands(message):
+def setdevmode(message):
     nav.set_dev_mode()
     bot.send_message(
         message.chat.id,
@@ -286,9 +279,14 @@ def other_comands(message):
     )
 
 @bot.message_handler(commands=['unsetdevmode'])
-def other_comands(message):
+def unsetdevmode(message):
     nav.unset_dev_mode()
     bot.send_message(
         message.chat.id,
         "Режим розробника вимкнено."
     )
+
+@bot.message_handler(commands=['test'])
+def test(message):
+    schtime = data.get_schtime(message.chat.id)
+    print(schtime)

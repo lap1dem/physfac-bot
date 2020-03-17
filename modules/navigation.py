@@ -79,6 +79,17 @@ def sch_get_day(chat_id):
         except KeyError:
             return None
 
+def sch_set_time(chat_id, time):
+    with sh.open(shelve_name) as storage:
+        storage['schtime'+str(chat_id)] = time
+
+def sch_get_time(chat_id):
+    with sh.open(shelve_name) as storage:
+        try:
+            return storage['schtime'+str(chat_id)]
+        except KeyError:
+            return None
+
 
 # ---------------EMAILS-----------------------------
 

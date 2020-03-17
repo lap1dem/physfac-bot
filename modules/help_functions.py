@@ -1,4 +1,6 @@
 from implib import *
+import modules.data_access as data
+
 
 def translate_day(ukr_day):
     if ukr_day == c.week_days[0]:
@@ -12,7 +14,8 @@ def translate_day(ukr_day):
     elif ukr_day == c.week_days[4]:
         return 'Friday.png'
     elif ukr_day == c.week_days[5]:
-        return ['Monday.png','Tuesday.png','Wednesday.png','Thursday.png','Friday.png']
+        return ['Monday.png', 'Tuesday.png', 'Wednesday.png', 'Thursday.png', 'Friday.png']
+
 
 def get_sch_folder(msg):
     if msg == '1 курс':
@@ -32,11 +35,14 @@ def get_sch_folder(msg):
     else:
         return None
 
-def capitalize_n(s,n):
-    return s[:n]+ s[n].capitalize() + s[n+1:]
+
+def capitalize_n(s, n):
+    return s[:n] + s[n].capitalize() + s[n + 1:]
+
 
 def get_sport_files():
     return [file[:-4] for file in os.listdir(sport_sch_path)]
+
 
 def get_fullname(message):
     fullname = message.from_user.first_name
@@ -45,7 +51,8 @@ def get_fullname(message):
         fullname += message.from_user.last_name
     except TypeError:
         pass
-    return(fullname)
+    return (fullname)
+
 
 def log_to_dialog(message, function):
     if c.log_to_dialog:
@@ -60,19 +67,20 @@ def check_line_length(line):
         res = ''
         line = ''
         for i in range(len(parts)):
-            line += ' '+parts[i]
+            line += ' ' + parts[i]
             if i == 0:
                 line = line[1:]
 
-            if len(line) > 16 or i == len(parts)-1:
+            if len(line) > 16 or i == len(parts) - 1:
                 res += line
                 line = ''
-                if not i == len(parts)-1:
+                if not i == len(parts) - 1:
                     res += '\n \t\t\t\t\t\t\t\t'
 
         return res
     else:
         return line
+
 
 def create_sch_message(df):
     join = '├ '
@@ -93,14 +101,14 @@ def create_sch_message(df):
     #         "sg",
     #         "half",
 
-    for i in range(1,5):
+    for i in range(1, 5):
         lesnum = df.loc[df['lesnum'] == i]
         mod = ''
 
-        if len(df.loc[df['lesnum'] == i])==0:
+        if len(df.loc[df['lesnum'] == i]) == 0:
             continue
 
-        if i == 4 or len(df.loc[df['lesnum'] == i+1])==0:
+        if i == 4 or len(df.loc[df['lesnum'] == i + 1]) == 0:
             lesmsg = end + '*' + lesnum['leshead'].values[0] + '*\n'
         else:
             lesmsg = join + '*' + lesnum['leshead'].values[0] + '*\n'
@@ -130,7 +138,7 @@ def create_sch_message(df):
         h2s1 = lesnum.loc[(df['half'] == 2) & (df['sg'] == 1)]
         h2s2 = lesnum.loc[(df['half'] == 2) & (df['sg'] == 2)]
 
-        if not False in [x.empty for x in [h1,h2,s1,s2,h1s1,h1s2,h2s1,h2s2]]:
+        if not False in [x.empty for x in [h1, h2, s1, s2, h1s1, h1s2, h2s1, h2s2]]:
             if lesnum['aud'].values[0] != None:
                 lesmsg += check_line_length(mod + join + lesnum['aud'].values[0] + '\n')
             if lesnum['teach'].values[0] == None:
@@ -175,7 +183,6 @@ def create_sch_message(df):
                     lesmsg += check_line_length(mod + join + s1['lesname'].values[0] + '\n')
                     lesmsg += mod + end + s1['teach'].values[0] + '\n'
 
-
                 mod = mod[:-3]
 
             if not h1s1.empty or not h1s2.empty:
@@ -185,7 +192,6 @@ def create_sch_message(df):
                 else:
                     lesmsg += mod + join + '*Чисельник*' + '\n'
                     mod += dash + '\t'
-
 
                 if not h1s1.empty:
                     if h1s2.empty:
@@ -288,12 +294,59 @@ def create_sch_message(df):
 
                 mod = mod[:-2]
 
-
-
-        if not (i == 4 or len(df.loc[df['lesnum'] == i+1])==0):
+        if not (i == 4 or len(df.loc[df['lesnum'] == i + 1]) == 0):
             lesmsg += dash + '\n'
         msg += lesmsg
-    return(msg)
+    return (msg)
 
+def tuple_from_string(string):
+    string = [i[0].split(sep=',') for i in string]
+    string = [(i[0][1:], i[1][:-1]) for i in string]
+    return string
 
+def check_time_diff(time1, time2, intsec):
+    sec1 = time1.hour*3600 + time1.minute*60 + time1.second
+    sec2 = time2.hour*3600 + time2.minute*60 + time2.second
+    return sec1 - sec2 <= intsec and sec1 - sec2 > 0
 
+def send_day_sch():
+    all_schtimes = tuple_from_string(data.get_all_schtime())
+    now = datetime.now()
+    send_to_users = []
+
+    for user_set in all_schtimes:
+        schtime = time.fromisoformat(user_set[1])
+
+        if check_time_diff(now, schtime, 60):
+            send_to_users.append(user_set)
+
+    for user_set in send_to_users:
+        day_ind = now.weekday()
+        if now.hour >= 14:
+            day_ind += 1
+        day = c.week[day_ind]
+
+        year = data.get_user_year(int(user_set[0]))
+        group = data.get_user_group(int(user_set[0]))
+        days = data.sch_get_days(year, group)
+        day_found = False
+        for d in days:
+            if day in d:
+                day = d
+                day_found = True
+        if day_found:
+            lessons = data.sch_get_lessons(year, group, day)
+            if not lessons.empty:
+                msg = create_sch_message(lessons)
+                is_num = data.get_nord()
+                if is_num:
+                    msg += "\nЦього тижня - _чисельник_."
+                else:
+                    msg += "\nЦього тижня - _знаменник_."
+                bot.send_message(
+                    int(user_set[0]),
+                    msg,
+                    parse_mode="Markdown",
+                )
+        else:
+            pass

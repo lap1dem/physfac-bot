@@ -14,15 +14,21 @@ from commands.other import *
 from commands.civrandom import *
 from commands.schedule_plus import *
 
+from apscheduler.schedulers.background import BackgroundScheduler
+
+
+
+
+
 print("Bot started")
+
 
 @bot.message_handler(commands=['start'])
 def start(message):
-
     fullname = help.get_fullname(message)
     print(fullname + ' joined!')
     username = message.from_user.username
-    if username == None:
+    if username is None:
         username = '-'
     data.check_reg(message.chat.id,
                    username,
@@ -39,22 +45,26 @@ def start(message):
     )
 
 
-
 @bot.message_handler(commands=['about'])
 def about(message):
     fullname = help.get_fullname(message)
     print('"about" command has been used by ' + fullname)
     help.log_to_dialog(message, "about")
-    msg = "*Фізфак Бот v" + c.botversion + "*\n_від " + c.lastbotupdate + "_" +\
-        "\n\nВи можете допомогти проекту ідеями або поповнивши базу даних" +\
-        " літератури, імейлів і т.п. \n\nЗ проблемами та " +\
-        "пропозиціями звертайтесь в телеграм [@vadym_bidula] або " +\
-        "на [пошту](vadym.bidula@gmail.com)."
+    msg = "*Фізфак Бот v" + c.botversion + "*\n_від " + c.lastbotupdate + "_" + \
+          "\n\nВи можете допомогти проекту ідеями або поповнивши базу даних" + \
+          " літератури, імейлів і т.п. \n\nЗ проблемами та " + \
+          "пропозиціями звертайтесь в телеграм [@vadym_bidula] або " + \
+          "на [пошту](vadym.bidula@gmail.com)."
 
     bot.send_message(
         message.chat.id,
         msg,
         parse_mode="Markdown"
     )
+
+
+scheduler = BackgroundScheduler()
+scheduler.add_job(help.send_day_sch, 'interval', minutes=1)
+scheduler.start()
 
 bot.polling(none_stop=True)
