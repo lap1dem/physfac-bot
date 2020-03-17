@@ -6,6 +6,7 @@ import modules.navigation as nav
 import modules.minka as minka
 import modules.help_functions as help
 import modules.data_access as data
+import modules.sheduled_tasks as schtasks
 
 from commands.schedule import *
 from commands.emails import *
@@ -64,7 +65,7 @@ def about(message):
 
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(help.send_day_sch, 'interval', minutes=1)
+scheduler.add_job(schtasks.send_day_sch, 'interval', minutes=1)
 scheduler.start()
 
 bot.polling(none_stop=True)
