@@ -1,5 +1,5 @@
 from implib import *
-import data_access as data
+import modules.data_access as data
 
 
 def translate_day(ukr_day):
