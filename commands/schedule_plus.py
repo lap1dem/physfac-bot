@@ -237,7 +237,7 @@ def subs_choose_time(message):
         markup.row('Назад')
         msg = bot.send_message(
             message.chat.id,
-            "Оберіть час зі списку або введіть свій через двокрапку. При виборі часу після 14 години ботом присилатиметься розклад на наступний день.",
+            "Оберіть час зі списку або введіть свій у форматі hh:mm. При виборі часу після 14 години ботом присилатиметься розклад на наступний день.",
             reply_markup=markup)
 
         bot.register_next_step_handler(msg, subs_finish)
