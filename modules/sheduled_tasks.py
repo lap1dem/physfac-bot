@@ -11,7 +11,7 @@ def send_day_sch():
     for user_set in all_schtimes:
         schtime = time.fromisoformat(user_set[1])
 
-        if check_time_diff(now, schtime, 60):
+        if help.check_time_diff(now, schtime, 60):
             send_to_users.append(user_set)
 
     for user_set in send_to_users:
