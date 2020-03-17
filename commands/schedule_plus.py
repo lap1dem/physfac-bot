@@ -14,16 +14,16 @@ def choosefunc(message):
     nav.delete_all(message.chat.id)
     # markup = key.custom_key(c.sch_plus_funcs)
     # markup.row('Вихід')
-    markup = key.sch_plus_years()
-    markup.row('Назад')
+    markup = key.custom_key(c.sch_plus_funcs)
+    markup.row('Вихід')
     msg = bot.send_message(
         message.chat.id,
         # "Розширені можливості для розкладу.\nБудь ласка, оберіть функцію зі списку.",
-        "Розклад у текстовому форматі.\nОберіть курс.",
+        "Розклад у текстовому форматі.\nОберіть потрібну функцію.",
         reply_markup=markup)
 
     # bot.register_next_step_handler(msg, go_to_func)
-    bot.register_next_step_handler(msg, choose_group)
+    bot.register_next_step_handler(msg, go_to_func)
 
 def go_to_func(message):
     if message.text == 'Вихід':
@@ -55,7 +55,17 @@ def go_to_func(message):
 
         bot.register_next_step_handler(msg, choose_group)
 
-# 'Розклад' case
+    elif message.text == 'Підписка на розклад':
+        markup = key.sch_plus_years()
+        markup.row('Назад')
+        msg = bot.send_message(
+            message.chat.id,
+            "Оберіть свій курс.",
+            reply_markup=markup)
+        bot.register_next_step_handler(msg, subs_choose_group)
+
+
+# 'Розклад' case ---------------------------
 def choose_group(message):
     if message.text == 'Назад':
         markup = key.custom_key(c.sch_plus_funcs)
@@ -116,7 +126,7 @@ def choose_day(message):
         markup.row('Назад')
         msg = bot.send_message(
             message.chat.id,
-            "Будь ласка, оберіть групу і списку.",
+            "Будь ласка, оберіть групу із списку.",
             reply_markup=markup)
 
         bot.register_next_step_handler(msg, choose_day)
@@ -170,4 +180,118 @@ def send_text_schedule(message):
 
         bot.register_next_step_handler(msg, send_text_schedule)
 
+# 'Підписка на розклад' case ---------------------------
+def subs_choose_group(message):
+    if message.text == 'Назад':
+        markup = key.custom_key(c.sch_plus_funcs)
+        markup.row('Вихід')
+        msg = bot.send_message(
+            message.chat.id,
+            "Будь ласка, оберіть функцію зі списку.",
+            reply_markup=markup)
+
+        bot.register_next_step_handler(msg, go_to_func)
+
+    elif message.text in data.sch_get_years():
+        nav.sch_set_year(message.chat.id, message.text)
+        markup = key.sch_plus_groups(message.chat.id)
+        markup.row('Назад')
+        msg = bot.send_message(
+            message.chat.id,
+            "Оберіть групу.",
+            reply_markup=markup)
+
+        bot.register_next_step_handler(msg, subs_choose_time)
+
+    else:
+        markup = key.sch_plus_years()
+        markup.row('Назад')
+        msg = bot.send_message(
+            message.chat.id,
+            "Будь ласка, оберіть курс зі списку.",
+            reply_markup=markup)
+
+        bot.register_next_step_handler(msg, subs_choose_group)
+
+
+def subs_choose_time(message):
+    if message.text == 'Назад':
+        markup = key.sch_plus_years()
+        markup.row('Назад')
+        msg = bot.send_message(
+            message.chat.id,
+            "Оберіть свій курс.",
+            reply_markup=markup)
+
+        bot.register_next_step_handler(msg, subs_choose_group)
+
+    elif message.text in data.sch_get_groups(nav.sch_get_year(message.chat.id)):
+        nav.sch_set_group(message.chat.id, message.text)
+        markup = key.custom_key([
+            '07:00',
+            '07:30',
+            '08:00',
+            '18:00',
+            '21:00',
+        ])
+        markup.row('Назад')
+        msg = bot.send_message(
+            message.chat.id,
+            "Оберіть час зі списку або введіть свій через двокрапку. При виборі часу після 14 години ботом присилатиметься розклад на наступний день.",
+            reply_markup=markup)
+
+        bot.register_next_step_handler(msg, subs_finish)
+
+    else:
+        markup = key.sch_plus_groups(message.chat.id)
+        markup.row('Назад')
+        msg = bot.send_message(
+            message.chat.id,
+            "Будь ласка, оберіть групу із списку.",
+            reply_markup=markup)
+
+        bot.register_next_step_handler(msg, subs_choose_time)
+
+def subs_finish(message):
+    if message.text == 'Назад':
+        markup = key.sch_plus_groups(message.chat.id)
+        markup.row('Назад')
+        msg = bot.send_message(
+            message.chat.id,
+            "Будь ласка, оберіть свою групу.",
+            reply_markup=markup)
+
+        bot.register_next_step_handler(msg, subs_choose_time)
+
+    else:
+        try:
+            schtime = time.fromisoformat(message.text)
+            group = nav.sch_get_group(message.chat.id)
+            year = nav.sch_get_year(message.chat.id)
+            data.set_user_year(message.chat.id, year)
+            data.set_user_group(message.chat.id, group)
+            data.set_schtime(message.chat.id, schtime)
+
+            markup = key.remove()
+            bot.send_message(
+                message.chat.id,
+                f"Готово! Чекайте розклад щоденно о {message.text}.",
+                reply_markup=markup)
+
+
+        except ValueError:
+            markup = key.custom_key([
+                '07:00',
+                '07:30',
+                '08:00',
+                '18:00',
+                '21:00',
+            ])
+            markup.row('Назад')
+            msg = bot.send_message(
+                message.chat.id,
+                "Час введено некоректно. Приклад: 06:30",
+                reply_markup=markup)
+
+            bot.register_next_step_handler(msg, subs_finish)
 

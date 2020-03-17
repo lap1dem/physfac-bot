@@ -167,3 +167,6 @@ def sch_plus_days(chat_id):
         key.row(d)
 
     return key
+
+def remove():
+    return telebot.types.ReplyKeyboardRemove()
