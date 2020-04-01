@@ -5,15 +5,16 @@ import numpy as np
 from PIL import Image, ImageFont, ImageDraw
 import difflib
 
+from civ_random.balanced_random import balanced_random
+
 
 dir = 'civ_random/'
-# W, H = (256, 64)
 W, H = (1024, 256)
 
 font = ImageFont.truetype(dir + 'albertus-nova/Albertus Nova.otf', 92)
 
 NAMEname = "NAME2.jpg"
-iconsdir = 'icons2'
+iconsdir = 'icons'
 
 def draw_name(name):
     NAME = Image.open(dir + NAMEname)
@@ -79,32 +80,27 @@ def remove_results():
         os.remove(dir + 'results/' + res)
 
 
-def civrandom(namelist, ncivs, bans):
+def civrandom(namelist, ncivs, bans, balanced=False):
     # bans - array of names without .jpg
     remove_results()
 
-    bans = [ban + '.jpg' for ban in bans]
-    iconlist = os.listdir(dir + iconsdir)
-    # bans = [
-    #     'Іспанія.jpg',
-    #     'Вавилон.jpg',
-    #     'Гуни.jpg',
-    #     'Венеція.jpg',
-    # ]
-
-    to_random = [i for i in iconlist if not i in bans]
-
     random.shuffle(namelist)
-
     player_headers = [draw_name(name) for name in namelist]
 
-    rand_civs = [[] for i in range(len(namelist))]
+    if not balanced:
+        iconlist = os.listdir(dir + iconsdir)
+        bans = [ban + '.jpg' for ban in bans]
+        to_random = [i for i in iconlist if not i in bans]
+        rand_civs = [[] for i in range(len(namelist))]
 
-    for i in range(ncivs):
-        for player in rand_civs:
-            rand_civ = random.choice(to_random)
-            to_random.remove(rand_civ)
-            player.append(rand_civ)
+        for i in range(ncivs):
+            for player in rand_civs:
+                rand_civ = random.choice(to_random)
+                to_random.remove(rand_civ)
+                player.append(rand_civ)
+
+    else:
+        rand_civs = balanced_random(len(namelist), ncivs, bans)
 
     player_blocks = [get_player_block(
         player_headers[i],
