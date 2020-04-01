@@ -16,19 +16,47 @@ def civ_start(message):
     #     return None
 
     nav.delete_all(message.chat.id)
-    markup_ncivs = key.civ_ncivs_key()
-    markup_ncivs.row("Вихід")
+
+    markup = key.custom_key(['Збалансований рандом', 'Рандомний рандом', 'Вихід'])
     msg = bot.send_message(
         message.chat.id,
-        "Рандомайзер націй в Civilization V.\nОберіть число націй на гравця.",
-        reply_markup=markup_ncivs,
+        "Рандомайзер націй в Civilization V.\nОберіть тип рандому.",
+        reply_markup=markup,
     )
-    bot.register_next_step_handler(msg, civ_bans)
+
+    bot.register_next_step_handler(msg, choose_type)
+
+
+def choose_type(message):
+    if message.text == "Вихід":
+        pass
+    else:
+        if message.text == 'Збалансований рандом':
+            nav.civ_set_balanced(message.chat.id, 1)
+        else:
+            nav.civ_set_balanced(message.chat.id, 0)
+
+        markup_ncivs = key.civ_ncivs_key()
+        markup_ncivs.row("Назад")
+        msg = bot.send_message(
+            message.chat.id,
+            "Оберіть число націй на гравця.",
+            reply_markup=markup_ncivs,
+        )
+        bot.register_next_step_handler(msg, civ_bans)
 
 
 def civ_bans(message):
-    if message.text == "Вихід":
-        pass
+    if message.text == "Назад":
+        markup = key.custom_key(['Збалансований рандом', 'Рандомний рандом', 'Вихід'])
+        msg = bot.send_message(
+            message.chat.id,
+            "Оберіть тип рандому.",
+            reply_markup=markup,
+        )
+
+        bot.register_next_step_handler(msg, choose_type)
+
 
     elif message.text not in ['5', '4', '3', '2', '1']:
         markup_ncivs = key.civ_ncivs_key()
@@ -96,7 +124,7 @@ def civ_final(message):
 
     bot.send_message(message.chat.id, "Забанені нації:\n" + bans_string)
     bot.send_message(message.chat.id, "Зачекайте секунду...")
-    civrandom(namelist, ncivs, bans)
+    civrandom(namelist, ncivs, bans, balanced=nav.civ_get_balanced(message.chat.id))
     photos = []
     reslist = os.listdir('civ_random/results')
     reslist = [i for i in reslist if i != 'civrandom.png']

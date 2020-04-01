@@ -239,6 +239,16 @@ def civ_getcivbans(chat_id):
         except KeyError:
             return []
 
+def civ_set_balanced(chat_id, value):
+    with sh.open(shelve_name) as storage:
+        storage['civbalansed'+str(chat_id)] = value
+
+def civ_get_balanced(chat_id):
+    with sh.open(shelve_name) as storage:
+        try:
+            return storage['civbalansed'+str(chat_id)]
+        except KeyError:
+            return []
 
 
 
