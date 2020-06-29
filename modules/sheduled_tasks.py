@@ -18,6 +18,8 @@ def send_day_sch():
         day_ind = now.weekday()
         if now.hour >= 14:
             day_ind += 1
+        if day_ind == 7:
+            day_ind = 0
         day = c.week[day_ind]
 
         year = data.get_user_year(int(user_set[0]))
