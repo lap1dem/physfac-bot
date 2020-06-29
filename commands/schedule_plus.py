@@ -12,17 +12,13 @@ def choosefunc(message):
 #         return None
 
     nav.delete_all(message.chat.id)
-    # markup = key.custom_key(c.sch_plus_funcs)
-    # markup.row('Вихід')
     markup = key.custom_key(c.sch_plus_funcs)
     markup.row('Вихід')
     msg = bot.send_message(
         message.chat.id,
-        # "Розширені можливості для розкладу.\nБудь ласка, оберіть функцію зі списку.",
         "Розклад у текстовому форматі.\nОберіть потрібну функцію.",
         reply_markup=markup)
 
-    # bot.register_next_step_handler(msg, go_to_func)
     bot.register_next_step_handler(msg, go_to_func)
 
 def go_to_func(message):
@@ -45,7 +41,7 @@ def go_to_func(message):
 
         bot.register_next_step_handler(msg, go_to_func)
 
-    elif message.text == 'Розклад':
+    elif message.text == c.sch_plus_funcs[0]: #Schedule
         markup = key.sch_plus_years()
         markup.row('Назад')
         msg = bot.send_message(
@@ -55,7 +51,7 @@ def go_to_func(message):
 
         bot.register_next_step_handler(msg, choose_group)
 
-    elif message.text == 'Підписка на розклад':
+    elif message.text == c.sch_plus_funcs[1]: #Subscribe
         markup = key.sch_plus_years()
         markup.row('Назад')
         msg = bot.send_message(
@@ -63,6 +59,13 @@ def go_to_func(message):
             "Оберіть свій курс.",
             reply_markup=markup)
         bot.register_next_step_handler(msg, subs_choose_group)
+
+    elif message.text == c.sch_plus_funcs[2]: #Unsubscribe
+        msg = bot.send_message(
+            message.chat.id,
+            "Перевірка статусу підписки...",
+        )
+        bot.register_next_step_handler(msg, unsubscribe_from_schedule)
 
 
 # 'Розклад' case ---------------------------
@@ -213,7 +216,6 @@ def subs_choose_group(message):
 
         bot.register_next_step_handler(msg, subs_choose_group)
 
-
 def subs_choose_time(message):
     if message.text == 'Назад':
         markup = key.sch_plus_years()
@@ -295,3 +297,17 @@ def subs_finish(message):
 
             bot.register_next_step_handler(msg, subs_finish)
 
+# 'Відписка від розкладу' -----------
+
+def unsubscribe_from_schedule(message):
+    if data.get_schtime(message.chat.id) is None:
+        msg_text = 'Не знайдено активної підписки.'
+    else:
+        msg_text = 'Підписку скасовано.'
+        data.set_schtime(message.chat.id, None)
+    markup = key.remove()
+    bot.send_message(
+        message.chat.id,
+        msg_text,
+        reply_markup=markup,
+    )

@@ -13,8 +13,8 @@ def data_conn(to_execute):
 
             res = to_execute(conn, cur, *args)
 
-        except (Exception, psql.DatabaseError) as error:
-            print("Error while executing " + to_execute.__name__ + "()", error)
+        except:
+            print("Error while executing " + to_execute.__name__ + "()")
 
         finally:
             if (conn):
@@ -297,9 +297,9 @@ def get_schtime(conn, cur, id):
     cur.execute(f"SELECT schtime FROM users WHERE id = {id}")
     schtime = cur.fetchall()[0]
     if schtime[0] is None:
-        return(None)
+        return None
     else:
-        return(time.fromisoformat(schtime[0]))
+        return time.fromisoformat(schtime[0])
 
 @data_conn
 def set_schtime(conn, cur, id, schtime):
