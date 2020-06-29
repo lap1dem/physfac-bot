@@ -63,9 +63,9 @@ def about(message):
         parse_mode="Markdown"
     )
 
-
-scheduler = BackgroundScheduler()
-scheduler.add_job(schtasks.send_day_sch, 'interval', minutes=1)
-scheduler.start()
+# TODO
+# scheduler = BackgroundScheduler()
+# scheduler.add_job(schtasks.send_day_sch, 'interval', minutes=1)
+# scheduler.start()
 
 bot.polling(none_stop=True)
