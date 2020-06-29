@@ -7,20 +7,13 @@ import modules.help_functions as help
 # Wrapper for connecting to database
 def data_conn(to_execute):
     def wrapper(*args):
-        try:
-            conn = psql.connect(DATABASE_URL, sslmode='require')
-            cur = conn.cursor()
-
-            res = to_execute(conn, cur, *args)
-
-        except:
-            print("Error while executing " + to_execute.__name__ + "()")
-
-        finally:
-            if (conn):
-                cur.close()
-                conn.close()
-            return res
+        conn = psql.connect(DATABASE_URL, sslmode='require')
+        cur = conn.cursor()
+        res = to_execute(conn, cur, *args)
+        if (conn):
+            cur.close()
+            conn.close()
+        return res
 
     return wrapper
 
@@ -299,7 +292,8 @@ def get_schtime(conn, cur, id):
     if schtime[0] is None:
         return None
     else:
-        return time.fromisoformat(schtime[0])
+        # return time.fromisoformat(schtime[0])
+        return schtime[0]
 
 @data_conn
 def set_schtime(conn, cur, id, schtime):
@@ -308,7 +302,7 @@ def set_schtime(conn, cur, id, schtime):
     else:
         schtime = schtime.isoformat()
         cur.execute(f"UPDATE users SET schtime = '{schtime}' WHERE id = {id}")
-    conn.commit()\
+    conn.commit()
 
 @data_conn
 def get_user_year(conn, cur, id):

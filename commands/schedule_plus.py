@@ -65,7 +65,18 @@ def go_to_func(message):
             message.chat.id,
             "Перевірка статусу підписки...",
         )
-        bot.register_next_step_handler(msg, unsubscribe_from_schedule)
+
+        if data.get_schtime(message.chat.id) is None:
+            msg_text = 'Не знайдено активної підписки.'
+        else:
+            msg_text = 'Підписку скасовано.'
+            data.set_schtime(message.chat.id, None)
+        markup = key.remove()
+        bot.send_message(
+            message.chat.id,
+            msg_text,
+            reply_markup=markup,
+        )
 
 
 # 'Розклад' case ---------------------------
@@ -296,18 +307,3 @@ def subs_finish(message):
                 reply_markup=markup)
 
             bot.register_next_step_handler(msg, subs_finish)
-
-# 'Відписка від розкладу' -----------
-
-def unsubscribe_from_schedule(message):
-    if data.get_schtime(message.chat.id) is None:
-        msg_text = 'Не знайдено активної підписки.'
-    else:
-        msg_text = 'Підписку скасовано.'
-        data.set_schtime(message.chat.id, None)
-    markup = key.remove()
-    bot.send_message(
-        message.chat.id,
-        msg_text,
-        reply_markup=markup,
-    )
