@@ -12,15 +12,20 @@ dir = 'civ_random/'
 W, H = (1024, 256)
 
 font = ImageFont.truetype(dir + 'albertus-nova/Albertus Nova.otf', 92)
+script_font = ImageFont.truetype(dir + 'albertus-nova/Albertus Nova Light.otf', 52)
 
-NAMEname = "NAME2.jpg"
+NAMEPIC = "NAME.jpg"
 iconsdir = 'icons'
 
-def draw_name(name):
-    NAME = Image.open(dir + NAMEname)
+def draw_name(name, queue_num = None, ban_num = None):
+    NAME = Image.open(dir + NAMEPIC)
     draw = ImageDraw.Draw(NAME)
     w, h = draw.textsize(name, font=font)
-    draw.text(((W - w) / 2, (H - h) / 2), name, font=font, fill="black")
+    draw.text(((W - w) / 2, (H - h) / 2), name, font=font, fill='black')
+    if queue_num is not None:
+        draw.text((24, 24), '('+str(queue_num)+')', font=script_font, fill='black')
+    if ban_num is not None:
+        draw.text((24, H - 24), '['+str(ban_num)+']', font=script_font, fill='black')
     return(NAME)
 
 
@@ -85,7 +90,14 @@ def civrandom(namelist, ncivs, bans, balanced=False):
     remove_results()
 
     random.shuffle(namelist)
-    player_headers = [draw_name(name) for name in namelist]
+    queue_nums = np.arange(1, len(namelist) + 1)
+    random.shuffle(queue_nums)
+    player_headers = []
+
+    for name in namelist:
+        qnum = random.choice(queue_nums).item()
+        player_headers.append(draw_name(name, queue_num=qnum))
+        queue_nums = queue_nums[queue_nums != qnum]
 
     if not balanced:
         iconlist = os.listdir(dir + iconsdir)

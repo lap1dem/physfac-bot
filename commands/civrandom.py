@@ -29,7 +29,13 @@ def civ_start(message):
 
 def choose_type(message):
     if message.text == "Вихід":
-        pass
+        markup = key.remove()
+        bot.send_message(
+            message.chat.id,
+            "Ну і ок.",
+            reply_markup=markup
+        )
+
     else:
         if message.text == 'Збалансований рандом':
             nav.civ_set_balanced(message.chat.id, 1)
@@ -141,3 +147,8 @@ def civ_final(message):
         bot.send_photo(message.chat.id, open('civ_random/results/' + 'civrandom.png', 'rb'))
     else:
         bot.send_document(message.chat.id, open('civ_random/results/' + 'civrandom.png', 'rb'))
+
+    bot.send_message(
+        message.chat.id,
+        "У круглих дужках - порядок піків націй в лоббі."
+    )
