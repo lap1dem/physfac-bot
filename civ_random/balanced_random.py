@@ -27,8 +27,8 @@ def load_rating(ncivs: int, bans):
         )
 
     rating['AVERAGE'] = total_rat
-    rating = rating.sort_values(by=['AVERAGE'], ascending=False).reset_index(drop=True)
     rating = rating[~rating['Нація'].isin(bans)]
+    rating = rating.sort_values(by=['AVERAGE'], ascending=False).reset_index(drop=True)
     return rating
 
 def get_split_indices_from_probs(probs, length):
@@ -51,10 +51,12 @@ def balanced_random(pl_num:int, ncivs:int, bans):
     for player in rand_civs:
         player_tier_set = random.choice(tier_sets)
         for tier in player_tier_set:
-            rand_df = rating.iloc[split_inds[tier-1]:split_inds[tier]]
+            rand_df = rating.loc[split_inds[tier-1]:split_inds[tier]]
+            print(split_inds[tier-1],split_inds[tier])
+            print(rand_df)
             nation = rand_df.sample(n=1)
             player.append(nation['Нація'].values[0] + '.jpg')
-            rating.drop(index = nation.index)
+            rating = rating.drop(index = nation.index)
 
     return rand_civs
 
