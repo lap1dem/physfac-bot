@@ -85,7 +85,7 @@ def remove_results():
         os.remove(dir + 'results/' + res)
 
 
-def civrandom(namelist, ncivs, bans, balanced=False):
+def civrandom(namelist, ncivs, bans, balanced=False, return_list=False):
     # bans - array of names without .jpg
     remove_results()
 
@@ -114,6 +114,9 @@ def civrandom(namelist, ncivs, bans, balanced=False):
     else:
         rand_civs = balanced_random(len(namelist), ncivs, bans)
 
+    if return_list:
+        return rand_civs
+
     player_blocks = [get_player_block(
         player_headers[i],
         rand_civs[i],
@@ -123,6 +126,8 @@ def civrandom(namelist, ncivs, bans, balanced=False):
     #     player_blocks[i].save(dir + "results/" + str(i) + ".png")
     final_img = get_final_image(player_blocks)
     final_img.save(dir + "results/civrandom.png")
+
+    return None
 
 
 def civ_spell_check(words):

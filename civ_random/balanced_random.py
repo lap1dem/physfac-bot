@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+import random
+from civ_random.generate_random_sets import generate_random_sets
 
 def load_rating(ncivs: int, bans):
     rating = pd.read_csv('civ_random/rating.csv')
@@ -25,45 +27,33 @@ def load_rating(ncivs: int, bans):
         )
 
     rating['AVERAGE'] = total_rat
-    rating = rating.sort_values(by=['AVERAGE'])
+    rating = rating.sort_values(by=['AVERAGE'], ascending=False).reset_index(drop=True)
     rating = rating[~rating['Нація'].isin(bans)]
-    rat_group = np.array_split(rating, ncivs)
+    return rating
 
-    for i in range(len(rat_group)):
-        rat_group[i]['POINTS'] = [i+1 for el in range(rat_group[i].shape[0])]
+def get_split_indices_from_probs(probs, length):
+    indices = [0]
+    cur_ind = 0
+    for p in probs:
+        cur_ind += int(length * p)
+        indices.append(cur_ind)
+    indices[-1] += 1
 
-    return(pd.concat(rat_group))
+    return indices
 
 def balanced_random(pl_num:int, ncivs:int, bans):
     rand_civs = [[] for i in range(pl_num)]
     rating = load_rating(ncivs, bans)
+    player_points = np.sum(np.arange(ncivs + 1))
+    tier_sets, tier_probs, tiers = generate_random_sets(np.arange(1, ncivs + 1), ncivs, sum=player_points)
+    split_inds = get_split_indices_from_probs(tier_probs, len(rating))
 
     for player in rand_civs:
-        to_random = ncivs
-        player_points = np.sum(np.arange(ncivs + 1))
-
-        while to_random:
-            if to_random == 1:
-                rand_df = rating[
-                    (rating['POINTS'].values <= player_points) &
-                    (rating['POINTS'].values >= player_points // to_random)
-                    ]
-                nation = rand_df.sample(n=1)
-                rating = rating.drop(nation.index)
-                player.append(nation['Нація'].values[0] + '.jpg')
-                to_random -= 1
-
-            else:
-                # print(player_points-to_random+1)
-                rand_df = rating[
-                    (rating['POINTS'].values <= player_points-to_random+1) &
-                    (rating['POINTS'].values >= player_points//to_random)
-                ]
-                nation = rand_df.sample(n=1)
-                rating = rating.drop(nation.index)
-                player.append(nation['Нація'].values[0] + '.jpg')
-                to_random -= 1
-                player_points -= nation['POINTS'].values[0]
+        player_tier_set = random.choice(tier_sets)
+        for tier in player_tier_set:
+            rand_df = rating.iloc[split_inds[tier-1]:split_inds[tier]]
+            nation = rand_df.sample(n=1)
+            player.append(nation['Нація'].values[0] + '.jpg')
 
     return rand_civs
 
