@@ -52,8 +52,6 @@ def balanced_random(pl_num:int, ncivs:int, bans):
         player_tier_set = random.choice(tier_sets)
         for tier in player_tier_set:
             rand_df = rating.loc[split_inds[tier-1]:split_inds[tier]]
-            print(split_inds[tier-1],split_inds[tier])
-            print(rand_df)
             nation = rand_df.sample(n=1)
             player.append(nation['Нація'].values[0] + '.jpg')
             rating = rating.drop(index = nation.index)
