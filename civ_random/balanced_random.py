@@ -4,7 +4,7 @@ import random
 from civ_random.generate_random_sets import generate_random_sets
 
 def load_rating(ncivs: int, bans, mode = 'standart'):
-    if mode = 'grades':
+    if mode == 'grades':
         rating = pd.read_csv('civ_random/rating.csv')
         cols = rating.columns
 
