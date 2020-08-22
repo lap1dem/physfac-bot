@@ -13,6 +13,7 @@ W, H = (1024, 256)
 
 font = ImageFont.truetype(dir + 'albertus-nova/Albertus Nova.otf', 92)
 script_font = ImageFont.truetype(dir + 'albertus-nova/Albertus Nova Light.otf', 52)
+micro_font = ImageFont.truetype(dir + 'albertus-nova/Albertus Nova Light.otf', 40)
 
 NAMEPIC = "NAME.jpg"
 iconsdir = 'icons'
@@ -64,15 +65,22 @@ def get_concat_v(images):
 
     return res
 
+def draw_tier(img, tier):
+    draw = ImageDraw.Draw(img)
+    text_tier = str(tier)
+    draw.text((12, 12), text_tier, font=micro_font, fill='black')
+    return img
 
-def get_player_block(plhead, nations):
+def get_player_block(plhead, nations, tiers):
     '''
     plhead - PIL image
     nations - names of files
     '''
     imgs = [plhead]
-    for nation in nations:
+    for nation, tier in zip(nations, tiers):
         img = Image.open(os.path.join(dir + iconsdir, nation))
+        if tier is not None:
+            img = draw_tier(img, tier)
         imgs.append(img)
 
     block = get_concat_v(imgs)
@@ -104,6 +112,7 @@ def civrandom(namelist, ncivs, bans, balanced=False, return_list=False):
         bans = [ban + '.jpg' for ban in bans]
         to_random = [i for i in iconlist if not i in bans]
         rand_civs = [[] for i in range(len(namelist))]
+        rand_tiers = [[None for j in range(ncivs)] for i in range(len(namelist))]
 
         for i in range(ncivs):
             for player in rand_civs:
@@ -112,7 +121,7 @@ def civrandom(namelist, ncivs, bans, balanced=False, return_list=False):
                 player.append(rand_civ)
 
     else:
-        rand_civs = balanced_random(len(namelist), ncivs, bans)
+        rand_civs, rand_tiers = balanced_random(len(namelist), ncivs, bans)
 
     if return_list:
         return rand_civs
@@ -120,6 +129,7 @@ def civrandom(namelist, ncivs, bans, balanced=False, return_list=False):
     player_blocks = [get_player_block(
         player_headers[i],
         rand_civs[i],
+        rand_tiers[i]
     ) for i in range(len(rand_civs))]
 
     # for i in range(len(player_blocks)):

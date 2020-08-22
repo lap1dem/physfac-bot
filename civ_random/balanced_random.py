@@ -3,7 +3,7 @@ import numpy as np
 import random
 from civ_random.generate_random_sets import generate_random_sets
 
-def load_rating(ncivs: int, bans, mode = 'standart'):
+def load_rating(ncivs: int, bans, mode = 'standard'):
     if mode == 'grades':
         rating = pd.read_csv('civ_random/rating.csv')
         cols = rating.columns
@@ -31,8 +31,9 @@ def load_rating(ncivs: int, bans, mode = 'standart'):
         rating = rating[~rating['Нація'].isin(bans)]
         rating = rating.sort_values(by=['AVERAGE'], ascending=False).reset_index(drop=True)
 
-    elif mode == 'standart':
-        rating = pd.read_csv('civ_random/rating.csv').rename(columns={0:'Місце', 1:'Нація'})
+    elif mode == 'standard':
+        rating = pd.read_csv('civ_random/civ_rating.csv', header=None).rename(columns={0:'Місце', 1:'Нація'})
+        rating = rating.sort_values(by=['Місце'], ascending=True)
         rating = rating[~rating['Нація'].isin(bans)].reset_index(drop=True)
 
     return rating
@@ -49,19 +50,21 @@ def get_split_indices_from_probs(probs, length):
 
 def balanced_random(pl_num:int, ncivs:int, bans):
     rand_civs = [[] for i in range(pl_num)]
-    rating = load_rating(ncivs, bans, mode='standart')
+    rand_tiers = []
+    rating = load_rating(ncivs, bans, mode='standard')
     player_points = np.sum(np.arange(ncivs + 1))
     tier_sets, tier_probs, tiers = generate_random_sets(np.arange(1, ncivs + 1), ncivs, sum=player_points)
     split_inds = get_split_indices_from_probs(tier_probs, len(rating))
 
     for player in rand_civs:
         player_tier_set = random.choice(tier_sets)
+        rand_tiers.append(player_tier_set)
         for tier in player_tier_set:
             rand_df = rating.loc[split_inds[tier-1]:split_inds[tier]]
             nation = rand_df.sample(n=1)
             player.append(nation['Нація'].values[0] + '.jpg')
             rating = rating.drop(index = nation.index)
 
-    return rand_civs
+    return (rand_civs, rand_tiers)
 
 
