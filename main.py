@@ -12,7 +12,6 @@ from commands.schedule import *
 from commands.emails import *
 from commands.library import *
 from commands.other import *
-from commands.civrandom import *
 from commands.schedule_plus import *
 
 from apscheduler.schedulers.background import BackgroundScheduler
