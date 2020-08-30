@@ -14,6 +14,10 @@ def choosefunc(message):
     nav.delete_all(message.chat.id)
     markup = key.custom_key(c.sch_plus_funcs)
     markup.row('Вихід')
+    bot.send_message(
+        message.chat.id,
+        "Увага!\nУ текстовому розкладі пристуні неточності, що будуть виправлені згодом. Користуйтесь командою /scchedule.",
+        reply_markup=markup)
     msg = bot.send_message(
         message.chat.id,
         "Розклад у текстовому форматі.\nОберіть потрібну функцію.",
