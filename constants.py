@@ -1,7 +1,7 @@
 botversion = "0.8.1"
 lastbotupdate = "17.03.2020"
 cur_year = 2020
-cur_semester = 2
+cur_semester = 1
 
 sch_plus_funcs = [
     'Розклад',
