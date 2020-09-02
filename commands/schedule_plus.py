@@ -18,6 +18,7 @@ def choosefunc(message):
         message.chat.id,
         "Увага!\nУ текстовому розкладі пристуні неточності, що будуть виправлені згодом. Користуйтесь командою /scchedule.",
         reply_markup=markup)
+    return None
     msg = bot.send_message(
         message.chat.id,
         "Розклад у текстовому форматі.\nОберіть потрібну функцію.",
