@@ -48,9 +48,3 @@ AGVA is under development.
 ### Sport and clinic schedules
 `/ttsport` and `/ttclinic` commands provide access to schedule of sports complex and
 student's clinic respectively.
-
-### Bonus features (hidden from public)
-`/civ` command was developed to improve playing experience in computer game Civilization V.
-It allows to shuffle the list of available civilizations in chosen number for chosen players.
-Works in 2 regimes: random and balanced.
-`Balanced` shuffle is based on a "tier list" with point grades for each civ.
