@@ -8,7 +8,7 @@ Bot is avaiable [here](http://t.me/physfac_bot).
 ## Overview
 
 1. Bot is written in Python using [pyTelegramBotAPI](https://github.com/eternnoir/pyTelegramBotAPI) library.
-2. For storing data PSQL server and [psycopg2](http://initd.org/psycopg/) package are using.
+2. For storing data PSQL server and [psycopg2](http://initd.org/psycopg/) package are used.
 3. For navigating the functions standard package `shelve` is used.
 4. All `/library` files are stored in the developer's dialogue and are accessed by file ID
 since the bot is not able to send files larger than 50 MB by default.
